@@ -10,4 +10,5 @@ public class SyntaxErrorException : Exception
         Position = position;
         ErrorMessage = message;
     }
+    public override string Message => $"Syntax error at line {Line}, position {Position}: {ErrorMessage}";
 }
