@@ -18,9 +18,18 @@ public class LexicalAnalyzer
     { "GetColorCount",TokenType.GetColorCount},
     { "IsBrushColor",TokenType.IsBrushColor},
     { "IsCanvasColor",TokenType.IsCanvasColor},
+    { "Red", TokenType.ColorLiteral },
+    { "Blue", TokenType.ColorLiteral },
+    { "Green", TokenType.ColorLiteral },
+    { "Yellow", TokenType.ColorLiteral },
+    { "Orange", TokenType.ColorLiteral },
+    { "Purple", TokenType.ColorLiteral },
+    { "Black", TokenType.ColorLiteral },
+    { "White", TokenType.ColorLiteral },
+    { "Transparent", TokenType.ColorLiteral },
     };
 
-   public static readonly Dictionary<string, TokenType> operators = new()
+    public static readonly Dictionary<string, TokenType> operators = new()
 {
    {"<-",TokenType.Assign},
    {"<=",TokenType.LesserOrEqual},
@@ -49,9 +58,10 @@ public class LexicalAnalyzer
 
     public static readonly List<(Regex, TokenType)> TokenRegex = new()
    {
-    (new Regex(@"^[\s\t]+"), TokenType.Spaces),
+    (new Regex(@"^[ \t]+"), TokenType.Spaces),
 
     (new Regex(@"^\n"), TokenType.EndOfLine),
+    (new Regex(@"^-?\d+[a-zA-Z_][a-zA-Z0-9_]*"), TokenType.InvalidNumber),
 
     (new Regex(@"^-?\d+"),TokenType.Number),
 

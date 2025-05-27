@@ -4,7 +4,7 @@ public class Token
     public TokenType Type { get; }
     public int Line { get; }
     public object? ParsedValue { get; }
-    public override string ToString() => $"{Type}:{Value} in {Line}";
+    public override string ToString() => $"{Type} Token:{Value} ,in line {Line}";
     public Token(TokenType type, string value, int line, object? parsedValue = null)
     {
         Value = value;
@@ -25,7 +25,7 @@ public enum TokenType
     //Symbols
     Assign, Comma, Semicolon, OpenBracket, ClosedBracket, OpenSquareBracket, ClosedSquareBracket,
 
-    Number, Boolean, Identifier, Label,
+    Number, InvalidNumber, Identifier, Label, ColorLiteral,
 
     EndOfLine, EndOfFile, Spaces
 }

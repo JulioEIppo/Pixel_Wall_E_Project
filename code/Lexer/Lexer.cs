@@ -6,10 +6,10 @@ public class Lexer
     private int Position { get; set; }
     private int CurrentLine { get; set; }
     public List<SyntaxErrorException> Errors { get; } = new List<SyntaxErrorException>();
-    public Lexer(string input, int position)
+    public Lexer(string input)
     {
         Input = input;
-        Position = position;
+        Position = 0;
         CurrentLine = 1;
     }
     private char GetActualChar
@@ -37,7 +37,7 @@ public class Lexer
     private bool IsAtEnd() => Position >= Input.Length;
 
 
-    public IEnumerable<Token> Lex(string input)
+    public IEnumerable<Token> Lex()
     {
         while (!IsAtEnd())
         {
@@ -52,10 +52,12 @@ public class Lexer
 
     private Token? GetNextToken()
     {
+        // Console.WriteLine($"GetNextToken at position {Position}: '{Input.Substring(Position)}'");
         var opMatch = LexicalAnalyzer.operatorRegex.Match(Input.Substring(Position));
         if (opMatch.Success)
         {
             string op = opMatch.Value;
+            //  Console.WriteLine($"Matched operator: '{op}' at position {Position}");
             if (LexicalAnalyzer.operators.TryGetValue(op, out TokenType type))
             {
                 Position += op.Length;
@@ -68,7 +70,12 @@ public class Lexer
             if (match.Success)
             {
                 string value = match.Value;
+                //  Console.WriteLine($"Matched {type}: '{value}' at position {Position}");
                 Position += value.Length;
+                if (type == TokenType.Spaces)
+                {
+                    return null;
+                }
                 if (type == TokenType.EndOfLine)
                 {
                     CurrentLine++;
@@ -99,21 +106,11 @@ public class Lexer
             Errors.Add(new SyntaxErrorException(CurrentLine, Position, $"Invalid number format: {value}"));
             return null;
         }
-        if (type == TokenType.Boolean)
+        if (type == TokenType.Identifier)
         {
-            if (bool.TryParse(value, out bool parsedBool))
-            {
-                parsedValue = parsedBool;
-                return new Token(type, value, CurrentLine, parsedValue);
-            }
-            else
-            {
-                Errors.Add(new SyntaxErrorException(CurrentLine, Position, $"Invalid boolean format: {value}"));
-                return null;
-            }
+            return new Token(type, value, CurrentLine);
         }
         Errors.Add(new SyntaxErrorException(CurrentLine, Position, $"Unexpected token: {value}"));
-        Position += value.Length;
         return null;
     }
 
