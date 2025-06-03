@@ -21,7 +21,7 @@ public enum TokenType
     //Methods
     Spawn, Color, Size, DrawLine, DrawCircle, DrawRectangle, Fill, GoTo,
     //Functions
-    GetActualX, GetActualY, GetCanvasSize, GetColorCount, IsBrushColor, IsCanvasColor,
+    GetActualX, GetActualY, GetCanvasSize, GetColorCount, IsBrushColor, IsCanvas    Color,
     //Symbols
     Assign, Comma, Semicolon, OpenBracket, ClosedBracket, OpenSquareBracket, ClosedSquareBracket,
 

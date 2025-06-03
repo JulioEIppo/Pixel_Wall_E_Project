@@ -6,9 +6,8 @@ class Program
 {
     static void Main(string[] args)
     {
-        // Example Pixel-Walle code (replace with your own test cases)
         string code = @"
-             Spawn(0,0)
+            Spawn(0,0)
             n <- 4
             Color Red
             fooBar123
@@ -29,7 +28,6 @@ class Program
             Console.WriteLine(token);
         }
 
-        // Print errors, if any
         if (lexer.Errors.Any())
         {
             Console.WriteLine("\nErrors:");

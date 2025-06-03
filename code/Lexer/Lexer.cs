@@ -23,17 +23,6 @@ public class Lexer
             return Input[Position];
         }
     }
-    private char Peek()
-    {
-        int nextPosition = Position + 1;
-        if (nextPosition >= Input.Length)
-        {
-            return '\0';
-        }
-        return Input[nextPosition];
-    }
-
-    private void Consume() => Position++;
     private bool IsAtEnd() => Position >= Input.Length;
 
 
@@ -88,7 +77,7 @@ public class Lexer
                 return TokenCreator(type, value);
             }
         }
-        Errors.Add(new SyntaxErrorException(CurrentLine, Position, $"Unexpected character: {GetActualChar}"));
+        Errors.Add(new SyntaxErrorException(CurrentLine, $"Unexpected character: {GetActualChar}"));
         Position++;
         return null;
     }
@@ -103,14 +92,14 @@ public class Lexer
                 parsedValue = parsedInt;
                 return new Token(type, value, CurrentLine, parsedValue);
             }
-            Errors.Add(new SyntaxErrorException(CurrentLine, Position, $"Invalid number format: {value}"));
+            Errors.Add(new SyntaxErrorException(CurrentLine, $"Invalid number format: {value}"));
             return null;
         }
         if (type == TokenType.Identifier)
         {
             return new Token(type, value, CurrentLine);
         }
-        Errors.Add(new SyntaxErrorException(CurrentLine, Position, $"Unexpected token: {value}"));
+        Errors.Add(new SyntaxErrorException(CurrentLine, $"Unexpected token: {value}"));
         return null;
     }
 

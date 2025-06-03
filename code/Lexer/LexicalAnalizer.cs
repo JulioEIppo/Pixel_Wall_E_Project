@@ -60,7 +60,7 @@ public class LexicalAnalyzer
    {
     (new Regex(@"^[ \t]+"), TokenType.Spaces),
 
-    (new Regex(@"^\n"), TokenType.EndOfLine),
+    (new Regex(@"^\r\n"), TokenType.EndOfLine),
     (new Regex(@"^-?\d+[a-zA-Z_][a-zA-Z0-9_]*"), TokenType.InvalidNumber),
 
     (new Regex(@"^-?\d+"),TokenType.Number),
