@@ -7,13 +7,18 @@ public class TokenStream
     {
         Tokens = tokens.ToList();
     }
+    private Token EndOfFileToken()
+    {
+        int line = Tokens.Count > 0 ? Tokens[^1].Line : -1;
+        return new Token(TokenType.EndOfFile, "", line);
+    }
     public Token? Next()
     {
         if (Position < Tokens.Count())
         {
             return Tokens[Position++];
         }
-        return null;
+        return EndOfFileToken();
     }
     public Token? Peek(int n = 1)
     {
@@ -22,7 +27,8 @@ public class TokenStream
         {
             return Tokens[index];
         }
-        return null;
+        return EndOfFileToken();
+
     }
     public bool IsAtEnd()
     {
@@ -34,25 +40,18 @@ public class TokenStream
         {
             return Tokens[Position];
         }
-        return null;
+        return EndOfFileToken();
+
     }
     public bool Match(params TokenType[] types)
     {
-        foreach(var type in types)
-        if (!IsAtEnd() && CurrentToken()?.Type == type)
-        {
-            Next();
-            return true;
-        }
+        foreach (var type in types)
+            if (!IsAtEnd() && CurrentToken()?.Type == type)
+            {
+                Next();
+                return true;
+            }
         return false;
-    }
-    public Token? Expect(TokenType type)
-    {
-        if (!IsAtEnd() && Current?.Type == type)
-        {
-            return Next()!;
-        }
-        return null;
     }
     public Token? Previous()
     {
@@ -60,6 +59,7 @@ public class TokenStream
         {
             return Tokens[Position - 1];
         }
-        return null;
+        return EndOfFileToken();
+
     }
 }

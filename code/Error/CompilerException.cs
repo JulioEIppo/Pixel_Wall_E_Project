@@ -1,13 +1,13 @@
 public class CompilerException: Exception
 {
-     public int Line { get; }
+    public Token Token { get; } // using a token for more information
     public string ErrorMessage { get; }
 
-    public CompilerException(int line, string message)
+    public CompilerException(Token token, string message)
     {
-        Line = line;
+        Token = token;
         ErrorMessage = message;
     }
-    public override string Message => $" Error at line {Line}: {ErrorMessage}";
+    public override string Message => $" Error at line {Token.Line}: {ErrorMessage}";
 
 }

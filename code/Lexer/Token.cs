@@ -17,11 +17,11 @@ public class Token
 public enum TokenType
 {
     //Operators
-    Addition, Subtract, Multiplication, Division, Power, Module, And, Or, Not, Equal, NotEqual, BiggerOrEqual, LesserOrEqual, Bigger, Lesser,
+    Addition, Subtract, Multiplication, Division, Power, Modulo, And, Or, Not, Equal, NotEqual, BiggerOrEqual, LesserOrEqual, Bigger, Lesser,
     //Methods
     Spawn, Color, Size, DrawLine, DrawCircle, DrawRectangle, Fill, GoTo,
     //Functions
-    GetActualX, GetActualY, GetCanvasSize, GetColorCount, IsBrushColor, IsCanvas    Color,
+    GetActualX, GetActualY, GetCanvasSize, GetColorCount, IsBrushColor, IsCanvasColor,
     //Symbols
     Assign, Comma, Semicolon, OpenBracket, ClosedBracket, OpenSquareBracket, ClosedSquareBracket,
 

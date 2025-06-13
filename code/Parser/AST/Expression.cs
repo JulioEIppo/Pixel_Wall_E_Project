@@ -1,6 +1,6 @@
 public abstract class Expression
 {
-    public abstract T Accept<T>(IVisitor<T> visitor);
+    public abstract T Accept<T>(IExpressionVisitor<T> visitor);
 }
 
 public class BinaryExpression : Expression
@@ -14,7 +14,7 @@ public class BinaryExpression : Expression
         Operator = op;
         Right = right;
     }
-    public override T Accept<T>(IVisitor<T> visitor)
+    public override T Accept<T>(IExpressionVisitor<T> visitor)
     {
         return visitor.VisitBinaryExpression(this);
     }
@@ -22,13 +22,13 @@ public class BinaryExpression : Expression
 public class UnaryExpression : Expression
 {
     public Token Operator { get; }
-    public Expression Expr { get; }
-    public UnaryExpression(Token op, Expression expr)
+    public Expression Expression { get; }
+    public UnaryExpression(Token op, Expression expression)
     {
         Operator = op;
-        Expr = expr;
+        Expression = expression;
     }
-    public override T Accept<T>(IVisitor<T> visitor)
+    public override T Accept<T>(IExpressionVisitor<T> visitor)
     {
         return visitor.VisitUnaryExpression(this);
     }
@@ -40,9 +40,21 @@ public class LiteralExpression : Expression
     {
         Value = value;
     }
-    public override T Accept<T>(IVisitor<T> visitor)
+    public override T Accept<T>(IExpressionVisitor<T> visitor)
     {
         return visitor.VisitLiteralExpression(this);
+    }
+}
+public class GroupingExpression : Expression
+{
+    public Expression Expression;
+    public GroupingExpression(Expression expression)
+    {
+        Expression = expression;
+    }
+    public override T Accept<T>(IExpressionVisitor<T> visitor)
+    {
+        return visitor.VisitGroupingExpression(this);
     }
 }
 public class IdentifierExpression : Expression
@@ -52,7 +64,7 @@ public class IdentifierExpression : Expression
     {
         Name = name;
     }
-    public override T Accept<T>(IVisitor<T> visitor)
+    public override T Accept<T>(IExpressionVisitor<T> visitor)
     {
         return visitor.VisitIdentifierExpression(this);
     }
@@ -66,7 +78,7 @@ public class FunctionExpression : Expression
         FunctionKeyword = functionKeyword;
         Arguments = arguments;
     }
-    public override T Accept<T>(IVisitor<T> visitor)
+    public override T Accept<T>(IExpressionVisitor<T> visitor)
     {
         return visitor.VisitFunctionExpression(this);
     }

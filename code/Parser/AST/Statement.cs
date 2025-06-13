@@ -2,7 +2,7 @@ using System.Reflection.Emit;
 
 public abstract class Statement
 {
-    public abstract T Accept<T>(IVisitor<T> visitor);
+    public abstract T Accept<T>(IStatementVisitor<T> visitor);
 }
 public class LabelStatement : Statement
 {
@@ -11,7 +11,7 @@ public class LabelStatement : Statement
     {
         LabelID = labelID;
     }
-    public override T Accept<T>(IVisitor<T> visitor)
+    public override T Accept<T>(IStatementVisitor<T> visitor)
     {
         return visitor.VisitLabelStatement(this);
     }
@@ -27,7 +27,7 @@ public class AssignmentStatement : Statement
         AssignOperator = assignOperator;
         Value = value;
     }
-    public override T Accept<T>(IVisitor<T> visitor)
+    public override T Accept<T>(IStatementVisitor<T> visitor)
     {
         return visitor.VisitAssignmentStatement(this);
     }
@@ -41,7 +41,7 @@ public class GoToStatement : Statement
         Label = label;
         Condition = condition;
     }
-    public override T Accept<T>(IVisitor<T> visitor)
+    public override T Accept<T>(IStatementVisitor<T> visitor)
     {
         return visitor.VisitGoToStatement(this);
     }
@@ -53,7 +53,7 @@ public class InstructionStatement : Statement
     {
         Function = function;
     }
-    public override T Accept<T>(IVisitor<T> visitor)
+    public override T Accept<T>(IStatementVisitor<T> visitor)
     {
         return visitor.VisitInstructionStatement(this);
     }

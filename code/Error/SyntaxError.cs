@@ -1,6 +1,5 @@
 public class SyntaxErrorException : CompilerException
 {
-
-    public SyntaxErrorException(int line, string message) : base(line, message) { }
-    public override string Message => $"Syntax error at line {Line}: {ErrorMessage}";
+    public SyntaxErrorException(Token token, string message) : base(token, message) { }
+    public override string Message => $"Syntax error at line {Token.Line}: {ErrorMessage}";
 }

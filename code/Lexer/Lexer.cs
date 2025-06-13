@@ -41,12 +41,10 @@ public class Lexer
 
     private Token? GetNextToken()
     {
-        // Console.WriteLine($"GetNextToken at position {Position}: '{Input.Substring(Position)}'");
         var opMatch = LexicalAnalyzer.operatorRegex.Match(Input.Substring(Position));
         if (opMatch.Success)
         {
             string op = opMatch.Value;
-            //  Console.WriteLine($"Matched operator: '{op}' at position {Position}");
             if (LexicalAnalyzer.operators.TryGetValue(op, out TokenType type))
             {
                 Position += op.Length;
@@ -59,7 +57,6 @@ public class Lexer
             if (match.Success)
             {
                 string value = match.Value;
-                //  Console.WriteLine($"Matched {type}: '{value}' at position {Position}");
                 Position += value.Length;
                 if (type == TokenType.Spaces)
                 {
@@ -68,7 +65,7 @@ public class Lexer
                 if (type == TokenType.EndOfLine)
                 {
                     CurrentLine++;
-                    return null;
+                    return new Token(TokenType.EndOfLine, "", CurrentLine);
                 }
                 if (type == TokenType.Identifier && LexicalAnalyzer.keywords.TryGetValue(value, out TokenType keywordType))
                 {

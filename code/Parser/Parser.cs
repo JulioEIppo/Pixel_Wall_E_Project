@@ -11,36 +11,63 @@ public class Parser
     }
     public void ReportSyntaxError(string message)
     {
-        int line = Stream.Current?.Line ?? -1;
-        Errors.Add(new SyntaxErrorException(line, message));
+        Errors.Add(new SyntaxErrorException(Stream.Current!, message));
     }
-    private Token? Consume(TokenType type, string errorMessage)
+    private void Parse()
     {
-        if (Stream.Match(type))
+        while (!Stream.IsAtEnd() && Stream.Current?.Type != TokenType.EndOfFile)
         {
-            return Stream.Previous();
+            try
+            {
+                Expression expr = ParseExpression()!;
+            }
+            catch (SyntaxErrorException error)
+            {
+                Errors.Add(error);
+                Synchronize();
+            }
+
         }
-        ReportSyntaxError(errorMessage);
-        return null;
     }
 
-    private Expression? ParseExpression()
+    private Expression ParseExpression()
     {
         return ParseEquality();
     }
-
-    private Expression? ParseEquality()
+    private Expression ParseEquality()
     {
-        Expression expr = ParseComparison()!;
+        Expression expr = ParseOr()!;
         while (Stream.Match(TokenType.Equal, TokenType.NotEqual))
         {
-            Token? op = Stream.Previous();
+            Token op = Stream.Previous()!;
+            Expression right = ParseOr()!;
+            expr = new BinaryExpression(expr, op!, right);
+        }
+        return expr;
+    }
+    private Expression ParseOr()
+    {
+        Expression expr = ParseAnd()!;
+        while (Stream.Match(TokenType.Or))
+        {
+            Token op = Stream.Previous()!;
+            Expression right = ParseAnd()!;
+            expr = new BinaryExpression(expr, op!, right);
+        }
+        return expr;
+    }
+    private Expression ParseAnd()
+    {
+        Expression expr = ParseComparison()!;
+        while (Stream.Match(TokenType.And))
+        {
+            Token op = Stream.Previous()!;
             Expression right = ParseComparison()!;
             expr = new BinaryExpression(expr, op!, right);
         }
         return expr;
     }
-    private Expression? ParseComparison()
+    private Expression ParseComparison()
     {
         Expression expr = ParseAddition()!;
         while (Stream.Match(TokenType.BiggerOrEqual, TokenType.Bigger, TokenType.LesserOrEqual, TokenType.Lesser))
@@ -51,39 +78,39 @@ public class Parser
         }
         return expr;
     }
-    private Expression? ParseAddition()
+    private Expression ParseAddition()
     {
         Expression expr = ParseMultiplication()!;
         while (Stream.Match(TokenType.Addition, TokenType.Subtract))
         {
-            Token? op = Stream.Previous();
+            Token op = Stream.Previous()!;
             Expression right = ParseMultiplication()!;
             expr = new BinaryExpression(expr, op!, right);
         }
         return expr;
     }
-    private Expression? ParseMultiplication()
+    private Expression ParseMultiplication()
     {
         Expression expr = ParseUnary()!;
-        while (Stream.Match(TokenType.Multiplication, TokenType.Division, TokenType.Module, TokenType.Power))
+        while (Stream.Match(TokenType.Multiplication, TokenType.Division, TokenType.Modulo, TokenType.Power))
         {
-            Token? op = Stream.Previous()!;
+            Token op = Stream.Previous()!;
             Expression right = ParseUnary()!;
             expr = new BinaryExpression(expr, op!, right);
         }
         return expr;
     }
-    private Expression? ParseUnary()
+    private Expression ParseUnary()
     {
         if (Stream.Match(TokenType.Subtract, TokenType.Not))
         {
-            Token? op = Stream.Previous();
+            Token op = Stream.Previous()!;
             Expression right = ParseUnary()!;
-            return new UnaryExpression(op!, right); 
+            return new UnaryExpression(op!, right);
         }
         return ParsePrimary();
     }
-    private Expression? ParsePrimary()
+    private Expression ParsePrimary()
     {
         if (Stream.Match(TokenType.Number))
         {
@@ -96,12 +123,24 @@ public class Parser
         if (Stream.Match(TokenType.OpenBracket))
         {
             var expr = ParseExpression();
-            if (Consume(TokenType.ClosedBracket, "Expected ')'") == null)
+            if (!Stream.Match(TokenType.ClosedBracket))
             {
-                return null;
+                throw new SyntaxErrorException(Stream.Previous()!, "Expected )");
             }
-            return expr;
+            return new GroupingExpression(expr!);
         }
-        return null;
+        throw new SyntaxErrorException(Stream.Current!, "Expected expression");
+    }
+    private void Synchronize()
+    {
+        while (!Stream.IsAtEnd())
+        {
+            if (Stream.Current?.Type == TokenType.EndOfLine)
+            {
+                Stream.Next();
+                break;
+            }
+            Stream.Next();
+        }
     }
 }
