@@ -36,9 +36,11 @@ public class UnaryExpression : Expression
 public class LiteralExpression : Expression
 {
     public object Value { get; }
-    public LiteralExpression(object value)
+    public Token Token { get; }
+    public LiteralExpression(Token token)
     {
-        Value = value;
+        Token = token;
+        Value = Token.ParsedValue!;
     }
     public override T Accept<T>(IExpressionVisitor<T> visitor)
     {
@@ -57,29 +59,17 @@ public class GroupingExpression : Expression
         return visitor.VisitGroupingExpression(this);
     }
 }
-public class IdentifierExpression : Expression
+public class VarExpression : Expression
 {
-    public string Name { get; }
-    public IdentifierExpression(string name)
+    public string ID { get; }
+    public Token Token { get;  }
+    public VarExpression(Token token)
     {
-        Name = name;
+        Token = token;
+        ID = token.Value;
     }
     public override T Accept<T>(IExpressionVisitor<T> visitor)
     {
-        return visitor.VisitIdentifierExpression(this);
-    }
-}
-public class FunctionExpression : Expression
-{
-    public Token FunctionKeyword { get; }
-    public List<Expression> Arguments { get; }
-    public FunctionExpression(Token functionKeyword, List<Expression> arguments)
-    {
-        FunctionKeyword = functionKeyword;
-        Arguments = arguments;
-    }
-    public override T Accept<T>(IExpressionVisitor<T> visitor)
-    {
-        return visitor.VisitFunctionExpression(this);
+        return visitor.VisitVarExpression(this);
     }
 }

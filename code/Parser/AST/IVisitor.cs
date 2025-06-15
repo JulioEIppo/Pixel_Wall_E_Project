@@ -7,15 +7,14 @@ public interface IExpressionVisitor<T>
     T VisitUnaryExpression(UnaryExpression expr);
     T VisitLiteralExpression(LiteralExpression expr);
     T VisitGroupingExpression(GroupingExpression expr);
-    T VisitIdentifierExpression(IdentifierExpression expr);
-    T VisitFunctionExpression(FunctionExpression expr);
+    T VisitVarExpression(VarExpression expr);
 }
 
 public interface IStatementVisitor<T>
 {
-    T VisitLabelStatement(LabelStatement stat);
-    T VisitAssignmentStatement(AssignmentStatement stat);
-    T VisitGoToStatement(GoToStatement stat);
-    T VisitInstructionStatement(InstructionStatement stat);
+    T VisitLabelStatement(LabelStatement stmt);
+    T VisitGoToStatement(GoToStatement stmt);
+    T VisitExpressionStatement(ExpressionStatement stmt);
+    T VisitVarDeclaration(VarDeclaration varDeclaration);
 
 }

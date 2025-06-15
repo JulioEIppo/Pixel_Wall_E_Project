@@ -44,7 +44,7 @@ public class LexicalAnalyzer
    {"*", TokenType.Multiplication},
    {"/", TokenType.Division},
    {"**", TokenType.Power},
-   {"%",TokenType.Module},
+   {"%",TokenType.Modulo},
    {"<",TokenType.Lesser},
    {">",TokenType.Bigger},
    {",",TokenType.Comma},

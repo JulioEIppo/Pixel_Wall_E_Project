@@ -1,7 +1,13 @@
-public class RuntimeErrorException : CompilerException
+public class RuntimeErrorException : Exception
 {
-    public RuntimeErrorException(Token token, string message) : base(token, message) { }
+    public Token Token { get; }
+    public string ErrorMessage { get; set; }
+    public RuntimeErrorException(Token token, string errorMessage)
+    {
+        Token = token;
+        ErrorMessage = errorMessage;
+    }
 
-    public override string Message => base.Message;
+    public override string Message => $"Error at Line:{Token.Line}: {ErrorMessage}";
 
 }

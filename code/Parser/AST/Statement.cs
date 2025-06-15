@@ -4,32 +4,31 @@ public abstract class Statement
 {
     public abstract T Accept<T>(IStatementVisitor<T> visitor);
 }
+public class ExpressionStatement : Statement
+{
+    public Expression Expression { get; }
+
+    public ExpressionStatement(Expression expression)
+    {
+        Expression = expression;
+    }
+    public override T Accept<T>(IStatementVisitor<T> visitor)
+    {
+        return visitor.VisitExpressionStatement(this);
+    }
+}
 public class LabelStatement : Statement
 {
     public string LabelID { get; }
-    public LabelStatement(string labelID)
+    public int Line { get; }
+    public LabelStatement(string labelID, int line)
     {
         LabelID = labelID;
+        Line = line;
     }
     public override T Accept<T>(IStatementVisitor<T> visitor)
     {
         return visitor.VisitLabelStatement(this);
-    }
-}
-public class AssignmentStatement : Statement
-{
-    public Token Identifier { get; }
-    public Token AssignOperator { get; }
-    public Expression Value { get; }
-    public AssignmentStatement(Token identifier, Token assignOperator, Expression value)
-    {
-        Identifier = identifier;
-        AssignOperator = assignOperator;
-        Value = value;
-    }
-    public override T Accept<T>(IStatementVisitor<T> visitor)
-    {
-        return visitor.VisitAssignmentStatement(this);
     }
 }
 public class GoToStatement : Statement
@@ -46,15 +45,18 @@ public class GoToStatement : Statement
         return visitor.VisitGoToStatement(this);
     }
 }
-public class InstructionStatement : Statement
+public class VarDeclaration : Statement
 {
-    public FunctionExpression Function { get; }
-    public InstructionStatement(FunctionExpression function)
+    public string ID { get; }
+    public Expression Expression { get; }
+    public VarDeclaration(string iD, Expression expression)
     {
-        Function = function;
+        ID = iD;
+        Expression = expression;
     }
     public override T Accept<T>(IStatementVisitor<T> visitor)
     {
-        return visitor.VisitInstructionStatement(this);
+        return visitor.VisitVarDeclaration(this);
     }
+
 }

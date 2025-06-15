@@ -2,7 +2,7 @@ public class TokenStream
 {
     private readonly List<Token> Tokens;
     public int Position = 0;
-    public Token? Current => CurrentToken();
+    public Token Current => CurrentToken();
     public TokenStream(IEnumerable<Token> tokens)
     {
         Tokens = tokens.ToList();
@@ -12,7 +12,7 @@ public class TokenStream
         int line = Tokens.Count > 0 ? Tokens[^1].Line : -1;
         return new Token(TokenType.EndOfFile, "", line);
     }
-    public Token? Next()
+    public Token Next()
     {
         if (Position < Tokens.Count())
         {
@@ -20,7 +20,7 @@ public class TokenStream
         }
         return EndOfFileToken();
     }
-    public Token? Peek(int n = 1)
+    public Token Peek(int n = 1)
     {
         int index = Position + n - 1;
         if (index < Tokens.Count)
@@ -34,7 +34,7 @@ public class TokenStream
     {
         return Position >= Tokens.Count;
     }
-    public Token? CurrentToken()
+    public Token CurrentToken()
     {
         if (Position < Tokens.Count)
         {
@@ -53,7 +53,7 @@ public class TokenStream
             }
         return false;
     }
-    public Token? Previous()
+    public Token Previous()
     {
         if (Position > 0 && Position - 1 < Tokens.Count)
         {

@@ -4,9 +4,20 @@ using System.Security.AccessControl;
 
 public class Interpreter : IExpressionVisitor<object>, IStatementVisitor<object>
 {
+    private Environment Environment = new();
     private object Evaluate(Expression expr)
     {
         return expr.Accept(this);
+    }
+    public object VisitVarDeclaration(VarDeclaration var)
+    {
+        object value = Evaluate(var.Expression);
+        Environment.Define(var.ID, value);
+        return value;
+    }
+    public object VisitVarExpression(VarExpression var)
+    {
+        return Environment.Get(var.Token);
     }
     public object VisitLiteralExpression(LiteralExpression expression)
     {
@@ -36,8 +47,11 @@ public class Interpreter : IExpressionVisitor<object>, IStatementVisitor<object>
             default: throw new RuntimeErrorException(expression.Operator, "Unknown operator");
         }
     }
-    public void VisitLabelStatement(LabelStatement label) { } // labels don't need to be evaluated 
-
+    public object VisitLabelStatement(LabelStatement label) { return null!; } // labels don't need to be evaluated 
+    public object VisitExpressionStatement(ExpressionStatement statement)
+    {
+        return Evaluate(statement.Expression);
+    }
     public object VisitBinaryExpression(BinaryExpression expression)
     {
         object left = Evaluate(expression.Left);
