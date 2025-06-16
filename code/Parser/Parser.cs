@@ -1,4 +1,6 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection.Emit;
+using System.Reflection.Metadata.Ecma335;
 using System.Text.RegularExpressions;
 
 public class Parser
@@ -13,6 +15,14 @@ public class Parser
     public void ReportSyntaxError(string message)
     {
         Errors.Add(new SyntaxErrorException(Stream.Current!.Line, message));
+    }
+    public Token Consume(TokenType type, string message)
+    {
+        if (Stream.Current.Type == type)
+        {
+            return Stream.Next();
+        }
+        throw new SyntaxErrorException(Stream.Current.Line, message);
     }
     public List<Statement> Parse()
     {
@@ -34,6 +44,16 @@ public class Parser
             }
         }
         return statements;
+    }
+    private Statement ParseGoTO()
+    {
+        Consume(TokenType.OpenSquareBracket, "Expected [");
+        Token label = Consume(TokenType.Label, "Expected label");
+        Consume(TokenType.ClosedSquareBracket, "Expected ]");
+        Consume(TokenType.OpenBracket, "Expected (");
+        Expression expr = ParseExpression();
+        Consume(TokenType.ClosedBracket, "Expected )");
+        return new GoToStatement(label.Value, expr);
     }
     private Statement ParseLabel()
     {
@@ -144,7 +164,14 @@ public class Parser
             Expression right = ParseUnary();
             return new UnaryExpression(op, right);
         }
-        return ParsePrimary();
+        return ParseCall();
+    }
+    private Expression ParseCall()
+    {
+        Expression expr = ParsePrimary();
+        if (Stream.Match(TokenType.OpenBracket))
+            return FinishCall(expr);
+        return expr;
     }
     private Expression ParsePrimary()
     {
@@ -178,5 +205,20 @@ public class Parser
             }
             Stream.Next();
         }
+    }
+    private Expression FinishCall(Expression callee)
+    {
+        List<Expression> args = new();
+        if (!Stream.Match(TokenType.ClosedBracket))
+        {
+            do
+            {
+                args.Add(ParseExpression());
+            } while (Stream.Match(TokenType.Comma));
+        }
+        Consume(TokenType.ClosedBracket, "Expected ) after arguments");
+        if (callee is VarExpression varExpr)
+            return new CallExpression(varExpr.Token, args);
+        throw new SyntaxErrorException(Stream.Current.Line, "Invalid function call");
     }
 }

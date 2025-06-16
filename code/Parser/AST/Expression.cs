@@ -16,7 +16,7 @@ public class BinaryExpression : Expression
     }
     public override T Accept<T>(IExpressionVisitor<T> visitor)
     {
-        return visitor.VisitBinaryExpression(this);
+        return visitor.Visit(this);
     }
 }
 public class UnaryExpression : Expression
@@ -30,7 +30,7 @@ public class UnaryExpression : Expression
     }
     public override T Accept<T>(IExpressionVisitor<T> visitor)
     {
-        return visitor.VisitUnaryExpression(this);
+        return visitor.Visit(this);
     }
 }
 public class LiteralExpression : Expression
@@ -44,7 +44,7 @@ public class LiteralExpression : Expression
     }
     public override T Accept<T>(IExpressionVisitor<T> visitor)
     {
-        return visitor.VisitLiteralExpression(this);
+        return visitor.Visit(this);
     }
 }
 public class GroupingExpression : Expression
@@ -56,13 +56,13 @@ public class GroupingExpression : Expression
     }
     public override T Accept<T>(IExpressionVisitor<T> visitor)
     {
-        return visitor.VisitGroupingExpression(this);
+        return visitor.Visit(this);
     }
 }
 public class VarExpression : Expression
 {
     public string ID { get; }
-    public Token Token { get;  }
+    public Token Token { get; }
     public VarExpression(Token token)
     {
         Token = token;
@@ -70,6 +70,21 @@ public class VarExpression : Expression
     }
     public override T Accept<T>(IExpressionVisitor<T> visitor)
     {
-        return visitor.VisitVarExpression(this);
+        return visitor.Visit(this);
+    }
+}
+public class CallExpression : Expression
+{
+    public Token Function { get; }
+    public List<Expression> Arguments { get; }
+
+    public CallExpression(Token function, List<Expression> args)
+    {
+        Function = function;
+        Arguments = args;
+    }
+    public override T Accept<T>(IExpressionVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
     }
 }

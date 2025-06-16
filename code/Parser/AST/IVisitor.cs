@@ -3,18 +3,26 @@ using System.Text.RegularExpressions;
 
 public interface IExpressionVisitor<T>
 {
-    T VisitBinaryExpression(BinaryExpression expr);
-    T VisitUnaryExpression(UnaryExpression expr);
-    T VisitLiteralExpression(LiteralExpression expr);
-    T VisitGroupingExpression(GroupingExpression expr);
-    T VisitVarExpression(VarExpression expr);
+    T Visit(BinaryExpression expr);
+    T Visit(UnaryExpression expr);
+    T Visit(LiteralExpression expr);
+    T Visit(GroupingExpression expr);
+    T Visit(VarExpression expr);
+    T Visit(CallExpression expr);
 }
 
 public interface IStatementVisitor<T>
 {
-    T VisitLabelStatement(LabelStatement stmt);
-    T VisitGoToStatement(GoToStatement stmt);
-    T VisitExpressionStatement(ExpressionStatement stmt);
-    T VisitVarDeclaration(VarDeclaration varDeclaration);
+    T Visit(LabelStatement stmt);
+    T Visit(GoToStatement stmt);
+    T Visit(ExpressionStatement stmt);
+    T Visit(VarDeclaration stmt);
+    T Visit(SpawnStmt stmt);
+    T Visit(ColorStmt stmt);
+    T Visit(SizeStmt stmt);
+    T Visit(DrawLineStmt stmt);
+    T Visit(DrawCircleStmt stmt);
+    T Visit(DrawRectangleStmt stmt);
+    T Visit(FillStmt stmt);
 
 }

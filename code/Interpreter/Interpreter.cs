@@ -5,29 +5,46 @@ using System.Security.AccessControl;
 public class Interpreter : IExpressionVisitor<object>, IStatementVisitor<object>
 {
     private Environment Environment = new();
+    private Dictionary<string, INativeFunction> NativeFuncions = new();
+    private LabelTable LabelTable = new();
     private object Evaluate(Expression expr)
     {
         return expr.Accept(this);
     }
-    public object VisitVarDeclaration(VarDeclaration var)
+    public object Visit(CallExpression expr)
+    {
+        if (!NativeFuncions.TryGetValue(expr.Function.Value, out var function))
+            throw new RuntimeErrorException(expr.Function, $"Function: {expr.Function.Value}  not found");
+        if (expr.Arguments.Count != function.Arity)
+        {
+            throw new RuntimeErrorException(expr.Function, $"Invalid amount of args, required arguments: {function.Arity}");
+        }
+        List<object> args = new();
+        foreach (var arg in expr.Arguments)
+        {
+            args.Add(arg);
+        }
+        return function.Invoke(args);
+    }
+    public object Visit(VarDeclaration var)
     {
         object value = Evaluate(var.Expression);
         Environment.Define(var.ID, value);
         return value;
     }
-    public object VisitVarExpression(VarExpression var)
+    public object Visit(VarExpression var)
     {
         return Environment.Get(var.Token);
     }
-    public object VisitLiteralExpression(LiteralExpression expression)
+    public object Visit(LiteralExpression expression)
     {
         return expression.Value;
     }
-    public object VisitGroupingExpression(GroupingExpression expression)
+    public object Visit(GroupingExpression expression)
     {
         return Evaluate(expression);
     }
-    public object VisitUnaryExpression(UnaryExpression expression)
+    public object Visit(UnaryExpression expression)
     {
         object right = Evaluate(expression.Expression);
         switch (expression.Operator.Type)
@@ -47,12 +64,12 @@ public class Interpreter : IExpressionVisitor<object>, IStatementVisitor<object>
             default: throw new RuntimeErrorException(expression.Operator, "Unknown operator");
         }
     }
-    public object VisitLabelStatement(LabelStatement label) { return null!; } // labels don't need to be evaluated 
-    public object VisitExpressionStatement(ExpressionStatement statement)
+    public object Visit(LabelStatement label) { return null!; } // labels don't need to be evaluated 
+    public object Visit(ExpressionStatement statement)
     {
         return Evaluate(statement.Expression);
     }
-    public object VisitBinaryExpression(BinaryExpression expression)
+    public object Visit(BinaryExpression expression)
     {
         object left = Evaluate(expression.Left);
         object right = Evaluate(expression.Right);
