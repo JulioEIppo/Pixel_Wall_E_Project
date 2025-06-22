@@ -1,0 +1,5 @@
+c:\PC\Cibernetica\1er Año 2.0\Programacion\2ndProject\PixelWallE\PixelWallE.Core\obj\Debug\net9.0\PixelWallE.Core.GeneratedMSBuildEditorConfig.editorconfig
+c:\PC\Cibernetica\1er Año 2.0\Programacion\2ndProject\PixelWallE\PixelWallE.Core\obj\Debug\net9.0\PixelWallE.Core.AssemblyInfoInputs.cache
+c:\PC\Cibernetica\1er Año 2.0\Programacion\2ndProject\PixelWallE\PixelWallE.Core\obj\Debug\net9.0\PixelWallE.Core.AssemblyInfo.cs
+c:\PC\Cibernetica\1er Año 2.0\Programacion\2ndProject\PixelWallE\PixelWallE.Core\obj\Debug\net9.0\PixelWallE.Core.csproj.CoreCompileInputs.cache
+c:\PC\Cibernetica\1er Año 2.0\Programacion\2ndProject\PixelWallE\PixelWallE.Core\obj\Debug\net9.0\PixelWallE.Core.sourcelink.json
