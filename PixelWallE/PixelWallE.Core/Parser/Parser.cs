@@ -8,6 +8,7 @@ namespace PixeLWallE
 {
     public class Parser
     {
+        public bool foundSpawn = false;
         public TokenStream Stream { get; }
         public List<Exception> Errors { get; set; }
         public Parser(TokenStream tokens, List<Exception> errors)
@@ -17,7 +18,7 @@ namespace PixeLWallE
         }
         public void ReportSyntaxError(string message)
         {
-            Errors.Add(new SyntaxErrorException(Stream.Current!.Line, message));
+            Errors.Add(new SyntaxErrorException(Stream.Current.Line, message));
         }
         public Token Consume(TokenType type, string message)
         {
@@ -34,16 +35,23 @@ namespace PixeLWallE
             {
                 try
                 {
-                    if (Stream.Current.Type == TokenType.Identifier && Stream.Peek().Type == TokenType.EndOfLine)
+                    if (!foundSpawn)
                     {
-                        statements.Add(ParseLabel());
+                        if (Stream.Current.Type != TokenType.Spawn) throw new SyntaxErrorException(Stream.Current.Line, "Expected Spawn Token at beginning");
+                        foundSpawn = true;
+                        statements.Add(ParseSpawn());
                     }
-                    if (Stream.Current.Type == TokenType.Identifier && Stream.Peek().Type == TokenType.Assign)
+                    else
                     {
-                        statements.Add(ParseDeclaration());
+                        if (Stream.Current.Type == TokenType.Identifier)
+                        {
+                            statements.Add(ParseDeclaration());
+                        }
+                        else
+                        {
+                            statements.Add(ParseStatement());
+                        }
                     }
-
-                    statements.Add(ParseStatement());
                 }
                 catch (SyntaxErrorException error)
                 {
@@ -67,6 +75,10 @@ namespace PixeLWallE
         }
         private Statement ParseSpawn()
         {
+            if (foundSpawn)
+            {
+                throw new SyntaxErrorException(Stream.Previous().Line, "Only one Spawn Token is allowed");
+            }
             Token keyword = Stream.Previous();
             Consume(TokenType.OpenBracket, "Expected (");
             Expression x = ParseExpression();
@@ -149,31 +161,35 @@ namespace PixeLWallE
 
         private Statement ParseGoTo()
         {
+            Token keyword = Stream.Previous();
             Consume(TokenType.OpenSquareBracket, "Expected [");
             Token label = Consume(TokenType.Label, "Expected label");
             Consume(TokenType.ClosedSquareBracket, "Expected ]");
             Consume(TokenType.OpenBracket, "Expected (");
             Expression expr = ParseExpression();
             Consume(TokenType.ClosedBracket, "Expected )");
-            return new GoToStatement(label.Value, expr);
+            return new GoToStatement(keyword, label.Value, expr);
         }
         private Statement ParseLabel()
         {
             if (Stream.Current.Type == TokenType.Identifier && Stream.Peek().Type == TokenType.EndOfLine)
             {
+                Token labelToken = Stream.Current;
                 string label = Stream.Current.Value;
                 Stream.Match(TokenType.Identifier);
                 int line = Stream.Current.Line;
                 Stream.Match(TokenType.EndOfLine);
-                return new LabelStatement(label, line);
+                return new LabelStatement(labelToken);
             }
             throw new SyntaxErrorException(Stream.Current.Line, "Invalid Label");
         }
         private Statement ParseDeclaration()
         {
-            if (Stream.Peek().Type == TokenType.Identifier && Stream.Peek(2).Type == TokenType.Assign)
+            if (Stream.Peek().Type == TokenType.Assign)
                 return ParseVarDeclaration();
-            return ParseExpressionStatement();
+            if (Stream.Peek().Type == TokenType.EndOfLine)
+                return ParseLabel();
+            throw new SyntaxErrorException(Stream.Current.Line, "Expected a declaration of a variable or a label");
         }
         private Statement ParseVarDeclaration()
         {

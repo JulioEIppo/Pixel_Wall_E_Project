@@ -2,96 +2,58 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection.Emit;
 using System.Security.AccessControl;
+using Avalonia.Animation;
 using Avalonia.Utilities;
+using Tmds.DBus.Protocol;
 
 namespace PixeLWallE
 {
     public class Interpreter : IExpressionVisitor<object>, IStatementVisitor<object>
     {
-        private Environment Environment = new();
-        private Dictionary<string, INativeFunction> NativeFuncions = new();
-        private LabelTable LabelTable = new();
+        private WallEEngine wallEContext;
+        private Dictionary<string, INativeFunction> nativeFunctions = new();
+        private Environment environment = new();
+        private Dictionary<string, INativeFunction> NativeFunctions = new();
+        private LabelTable labelTable = new();
+        private int currentLine;
+        public Interpreter(WallEEngine context)
+        {
+            wallEContext = context;
+            this.nativeFunctions = new()
+            {
+                {"GetActualX", new GetActualXFunction(context)}
+            };
+        }
+
+        public void Interpret(List<Statement> statements)
+        {
+            try
+            {
+                FillLabels(statements);
+                currentLine = 0;
+                while (currentLine < statements.Count)
+                {
+                    int aux = currentLine;
+                    RunStatement(statements[currentLine]);
+                    if (aux == currentLine) currentLine++;
+                }
+            }
+            catch (RuntimeErrorException)
+            {
+                // VISUAL MESSAGE OR SOMETHING HERE!!!
+            }
+        }
         private object Evaluate(Expression expr)
         {
             return expr.Accept(this);
         }
-        public void Visit(SpawnStmt spawn)
+
+        private void RunStatement(Statement statement)
         {
-            object x = Evaluate(spawn.X);
-            object y = Evaluate(spawn.Y);
-            if (x is int && y is int)
-            {
-                return;
-            }
-            throw new RuntimeErrorException(spawn.Keyword, "Expected int parameters");
-        }
-        public void Visit(ColorStmt color)
-        {
-            object colorString = Evaluate(color.Color);
-            if (colorString is not string)
-            {
-                throw new RuntimeErrorException(color.Keyword, "Expected color");
-            }
-        }
-        public object Visit(CallExpression expr)
-        {
-            if (!NativeFuncions.TryGetValue(expr.Function.Value, out var function))
-                throw new RuntimeErrorException(expr.Function, $"Function: {expr.Function.Value}  not found");
-            if (expr.Arguments.Count != function.Arity)
-            {
-                throw new RuntimeErrorException(expr.Function, $"Invalid amount of args, required arguments: {function.Arity}");
-            }
-            List<object> args = new();
-            foreach (var arg in expr.Arguments)
-            {
-                args.Add(arg);
-            }
-            return function.Invoke(args);
-        }
-        public object Visit(VarDeclaration var)
-        {
-            object value = Evaluate(var.Expression);
-            Environment.Define(var.ID, value);
-            return value;
-        }
-        public object Visit(VarExpression var)
-        {
-            return Environment.Get(var.Token);
+            statement.Accept(this);
         }
 
-        public object Visit(LiteralExpression expression)
-        {
-            return expression.Value;
-        }
-        public object Visit(GroupingExpression expression)
-        {
-            return Evaluate(expression);
-        }
-        public object Visit(UnaryExpression expression)
-        {
-            object right = Evaluate(expression.Expression);
-            switch (expression.Operator.Type)
-            {
-                case TokenType.Subtract:
-                    if (right is int rInt)
-                    {
-                        return -rInt;
-                    }
-                    throw new RuntimeErrorException(expression.Operator, "Integer operand required");
-                case TokenType.Not:
-                    if (right is bool rBool)
-                    {
-                        return !rBool;
-                    }
-                    throw new RuntimeErrorException(expression.Operator, "Boolean operand required");
-                default: throw new RuntimeErrorException(expression.Operator, "Unknown operator");
-            }
-        }
-        public object Visit(LabelStatement label) { return null!; } // labels don't need to be evaluated 
-        public object Visit(ExpressionStatement statement)
-        {
-            return Evaluate(statement.Expression);
-        }
+        //EXPRESSIONS
         public object Visit(BinaryExpression expression)
         {
             object left = Evaluate(expression.Left);
@@ -153,6 +115,159 @@ namespace PixeLWallE
                     return (int)left < (int)right;
 
                 default: throw new RuntimeErrorException(expression.Operator, "Unknown operator");
+            }
+        }
+        public object Visit(CallExpression expr)
+        {
+            if (!NativeFunctions.TryGetValue(expr.Function.Value, out var function))
+                throw new RuntimeErrorException(expr.Function, $"Function: {expr.Function.Value}  not found");
+            if (expr.Arguments.Count != function.Arity)
+            {
+                throw new RuntimeErrorException(expr.Function, $"Invalid amount of args, required arguments: {function.Arity}");
+            }
+            List<object> args = new();
+            foreach (var arg in expr.Arguments)
+            {
+                args.Add(arg);
+            }
+            return function.Invoke(args, expr.Function);
+        }
+        public object Visit(VarExpression var)
+        {
+            return environment.Get(var.Token);
+        }
+
+        public object Visit(LiteralExpression expression)
+        {
+            return expression.Value;
+        }
+        public object Visit(GroupingExpression expression)
+        {
+            return Evaluate(expression);
+        }
+        public object Visit(UnaryExpression expression)
+        {
+            object right = Evaluate(expression.Expression);
+            switch (expression.Operator.Type)
+            {
+                case TokenType.Subtract:
+                    if (right is int rInt)
+                    {
+                        return -rInt;
+                    }
+                    throw new RuntimeErrorException(expression.Operator, "Integer operand required");
+                case TokenType.Not:
+                    if (right is bool rBool)
+                    {
+                        return !rBool;
+                    }
+                    throw new RuntimeErrorException(expression.Operator, "Boolean operand required");
+                default: throw new RuntimeErrorException(expression.Operator, "Unknown operator");
+            }
+        }
+
+
+        //STATEMENTS
+        public void Visit(SpawnStmt spawn)
+        {
+            object x = Evaluate(spawn.X);
+            object y = Evaluate(spawn.Y);
+            if (x is int valueX && y is int valueY)
+            {
+                wallEContext.Spawn(valueX, valueY, spawn.Keyword);
+            }
+            throw new RuntimeErrorException(spawn.Keyword, "Expected int parameters");
+        }
+        public void Visit(ColorStmt colorStmt)
+        {
+            object colorString = Evaluate(colorStmt.Color);
+            if (colorString is not string color)
+            {
+                throw new RuntimeErrorException(colorStmt.Keyword, "Expected color parameter");
+            }
+            wallEContext.SetColor(color, colorStmt.Keyword);
+        }
+        public void Visit(SizeStmt size)
+        {
+            object value = Evaluate(size.Size);
+            if (value is not int sizeValue)
+            {
+                throw new RuntimeErrorException(size.Keyword, "Expected int parameter");
+            }
+            wallEContext.SetSize(sizeValue, size.Keyword);
+        }
+        public void Visit(DrawLineStmt drawLine)
+        {
+            object dirX = Evaluate(drawLine.DirX);
+            object dirY = Evaluate(drawLine.DirY);
+            object distance = Evaluate(drawLine.Distance);
+            if (dirX is not int || dirY is not int || distance is not int)
+            {
+                throw new RuntimeErrorException(drawLine.Keyword, "Expected int parameters");
+            }
+            wallEContext.DrawLine((int)dirX, (int)dirY, (int)distance, drawLine.Keyword);
+        }
+        public void Visit(DrawCircleStmt drawCircle)
+        {
+            object dirX = Evaluate(drawCircle.DirX);
+            object dirY = Evaluate(drawCircle.DirY);
+            object radius = Evaluate(drawCircle.Radius);
+            if (dirX is not int || dirY is not int || radius is not int)
+            {
+                throw new RuntimeErrorException(drawCircle.Keyword, "Expected int parameters");
+            }
+            wallEContext.DrawCircle((int)dirX, (int)dirY, (int)radius, drawCircle.Keyword);
+        }
+        public void Visit(DrawRectangleStmt drawRectangle)
+        {
+            object dirX = Evaluate(drawRectangle.DirX);
+            object dirY = Evaluate(drawRectangle.DirY);
+            object distance = Evaluate(drawRectangle.Distance);
+            object width = Evaluate(drawRectangle.Width);
+            object height = Evaluate(drawRectangle.Height);
+            if (dirX is not int || dirY is not int || distance is not int || width is not int || height is not int)
+            {
+                throw new RuntimeErrorException(drawRectangle.Keyword, "Expected int parameters");
+            }
+            wallEContext.DrawRectangle((int)dirX, (int)dirY, (int)distance, (int)width, (int)height, drawRectangle.Keyword);
+        }
+        public void Visit(FillStmt fill)
+        {
+            wallEContext.Fill();
+        }
+        public void Visit(VarDeclaration var)
+        {
+            object value = Evaluate(var.Expression);
+            environment.Define(var.ID, value);
+        }
+        public void Visit(LabelStatement label) { } // labels don't need to be evaluated 
+        public void Visit(ExpressionStatement statement)
+        {
+            Evaluate(statement.Expression);
+        }
+        public void Visit(GoToStatement goToStatement)
+        {
+            var condition = Evaluate(goToStatement.Condition);
+            if (condition is not bool)
+            {
+                throw new RuntimeErrorException(goToStatement.Keyword, "Invalid condition, expected bool");
+            }
+            if ((bool)condition)
+            {
+                currentLine = labelTable.GetLine(goToStatement.Keyword);
+            }
+        }
+
+
+        //HELPERS
+        private void FillLabels(List<Statement> statements)
+        {
+            for (int i = 0; i < statements.Count; i++)
+            {
+                if (statements[i] is LabelStatement labelStatement)
+                {
+                    labelTable.Add(labelStatement.LabelToken);
+                }
             }
         }
         private int HandlePower(int baseValue, int exponent, Token opToken)

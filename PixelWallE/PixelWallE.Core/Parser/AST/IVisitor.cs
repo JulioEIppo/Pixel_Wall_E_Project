@@ -15,17 +15,17 @@ namespace PixeLWallE
 
     public interface IStatementVisitor<T>
     {
-        T Visit(LabelStatement stmt);
-        T Visit(GoToStatement stmt);
-        T Visit(ExpressionStatement stmt);
-        T Visit(VarDeclaration stmt);
-        T Visit(SpawnStmt stmt);
-        T Visit(ColorStmt stmt);
-        T Visit(SizeStmt stmt);
-        T Visit(DrawLineStmt stmt);
-        T Visit(DrawCircleStmt stmt);
-        T Visit(DrawRectangleStmt stmt);
-        T Visit(FillStmt stmt);
+        void Visit(LabelStatement stmt);
+        void Visit(GoToStatement stmt);
+        void Visit(ExpressionStatement stmt);
+        void Visit(VarDeclaration stmt);
+        void Visit(SpawnStmt stmt);
+        void Visit(ColorStmt stmt);
+        void Visit(SizeStmt stmt);
+        void Visit(DrawLineStmt stmt);
+        void Visit(DrawCircleStmt stmt);
+        void Visit(DrawRectangleStmt stmt);
+        void Visit(FillStmt stmt);
 
     }
 }

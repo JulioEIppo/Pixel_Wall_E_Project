@@ -5,7 +5,7 @@ namespace PixeLWallE
 {
     public class LexicalAnalyzer
     {
-        public static readonly Dictionary<string, TokenType> keywords = new(StringComparer.OrdinalIgnoreCase)
+        public static readonly Dictionary<string, TokenType> keywords = new()
 {
     {"Spawn",TokenType.Spawn},
     { "Color", TokenType.Color},
@@ -20,6 +20,7 @@ namespace PixeLWallE
     { "GetCanvasSize",TokenType.GetCanvasSize},
     { "GetColorCount",TokenType.GetColorCount},
     { "IsBrushColor",TokenType.IsBrushColor},
+    {"IsBrushSize", TokenType.IsBrushSize},
     { "IsCanvasColor",TokenType.IsCanvasColor},
     { "Red", TokenType.ColorLiteral },
     { "Blue", TokenType.ColorLiteral },

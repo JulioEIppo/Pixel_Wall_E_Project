@@ -23,7 +23,7 @@ namespace PixeLWallE
         //Methods
         Spawn, Color, Size, DrawLine, DrawCircle, DrawRectangle, Fill, GoTo,
         //Functions
-        GetActualX, GetActualY, GetCanvasSize, GetColorCount, IsBrushColor, IsCanvasColor,
+        GetActualX, GetActualY, GetCanvasSize, GetColorCount, IsBrushColor, IsBrushSize, IsCanvasColor,
         //Symbols
         Assign, Comma, Semicolon, OpenBracket, ClosedBracket, OpenSquareBracket, ClosedSquareBracket,
 

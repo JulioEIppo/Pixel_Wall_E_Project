@@ -3,7 +3,7 @@ namespace PixeLWallE
 {
     public abstract class Statement
     {
-        public abstract T Accept<T>(IStatementVisitor<T> visitor);
+        public abstract void Accept<T>(IStatementVisitor<T> visitor);
     }
     public class ExpressionStatement : Statement
     {
@@ -13,37 +13,39 @@ namespace PixeLWallE
         {
             Expression = expression;
         }
-        public override T Accept<T>(IStatementVisitor<T> visitor)
+        public override void Accept<T>(IStatementVisitor<T> visitor)
         {
-            return visitor.Visit(this);
+            visitor.Visit(this);
         }
     }
     public class LabelStatement : Statement
     {
-        public string LabelID { get; }
-        public int Line { get; }
-        public LabelStatement(string labelID, int line)
+        public Token LabelToken { get; }
+        public string LabelID => LabelToken.Value;
+        public int Line => LabelToken.Line;
+        public LabelStatement(Token token)
         {
-            LabelID = labelID;
-            Line = line;
+            LabelToken = token;
         }
-        public override T Accept<T>(IStatementVisitor<T> visitor)
+        public override void Accept<T>(IStatementVisitor<T> visitor)
         {
-            return visitor.Visit(this);
+            visitor.Visit(this);
         }
     }
     public class GoToStatement : Statement
     {
+        public Token Keyword { get; }
         public string Label { get; }
         public Expression Condition { get; }
-        public GoToStatement(string label, Expression condition)
+        public GoToStatement(Token keyword, string label, Expression condition)
         {
+            Keyword = keyword;
             Label = label;
             Condition = condition;
         }
-        public override T Accept<T>(IStatementVisitor<T> visitor)
+        public override void Accept<T>(IStatementVisitor<T> visitor)
         {
-            return visitor.Visit(this);
+            visitor.Visit(this);
         }
     }
     public class VarDeclaration : Statement
@@ -55,9 +57,9 @@ namespace PixeLWallE
             ID = iD;
             Expression = expression;
         }
-        public override T Accept<T>(IStatementVisitor<T> visitor)
+        public override void Accept<T>(IStatementVisitor<T> visitor)
         {
-            return visitor.Visit(this);
+            visitor.Visit(this);
         }
     }
 
@@ -72,9 +74,9 @@ namespace PixeLWallE
             X = x;
             Y = y;
         }
-        public override T Accept<T>(IStatementVisitor<T> visitor)
+        public override void Accept<T>(IStatementVisitor<T> visitor)
         {
-            return visitor.Visit(this);
+            visitor.Visit(this);
         }
     }
     public class ColorStmt : Statement
@@ -86,9 +88,9 @@ namespace PixeLWallE
             Keyword = keyword;
             Color = color;
         }
-        public override T Accept<T>(IStatementVisitor<T> visitor)
+        public override void Accept<T>(IStatementVisitor<T> visitor)
         {
-            return visitor.Visit(this);
+            visitor.Visit(this);
         }
     }
     public class SizeStmt : Statement
@@ -100,9 +102,9 @@ namespace PixeLWallE
             Keyword = keyword;
             Size = size;
         }
-        public override T Accept<T>(IStatementVisitor<T> visitor)
+        public override void Accept<T>(IStatementVisitor<T> visitor)
         {
-            return visitor.Visit(this);
+            visitor.Visit(this);
         }
     }
     public class DrawLineStmt : Statement
@@ -119,9 +121,9 @@ namespace PixeLWallE
             DirY = dirY;
             Distance = distance;
         }
-        public override T Accept<T>(IStatementVisitor<T> visitor)
+        public override void Accept<T>(IStatementVisitor<T> visitor)
         {
-            return visitor.Visit(this);
+            visitor.Visit(this);
         }
     }
     public class DrawCircleStmt : Statement
@@ -137,9 +139,9 @@ namespace PixeLWallE
             DirY = dirY;
             Radius = radius;
         }
-        public override T Accept<T>(IStatementVisitor<T> visitor)
+        public override void Accept<T>(IStatementVisitor<T> visitor)
         {
-            return visitor.Visit(this);
+            visitor.Visit(this);
         }
     }
 
@@ -161,9 +163,9 @@ namespace PixeLWallE
             Width = width;
             Height = height;
         }
-        public override T Accept<T>(IStatementVisitor<T> visitor)
+        public override void Accept<T>(IStatementVisitor<T> visitor)
         {
-            return visitor.Visit(this);
+            visitor.Visit(this);
         }
     }
     public class FillStmt : Statement
@@ -173,9 +175,9 @@ namespace PixeLWallE
         {
             Keyword = keyword;
         }
-        public override T Accept<T>(IStatementVisitor<T> visitor)
+        public override void Accept<T>(IStatementVisitor<T> visitor)
         {
-            return visitor.Visit(this);
+            visitor.Visit(this);
         }
     }
 }

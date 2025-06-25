@@ -11,6 +11,6 @@ namespace PixeLWallE
         ErrorMessage = errorMessage;
     }
 
-    public override string Message => $"Error at Line:{Token.Line}: {ErrorMessage}";
+    public override string Message => $"Error at Line:{Token?.Line}: {ErrorMessage}";
 
 }}
