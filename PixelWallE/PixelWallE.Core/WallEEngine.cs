@@ -1,11 +1,14 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
-using Avalonia.Media;
+using PixelWallE;
 
-namespace PixeLWallE
+namespace PixelWallE
 {
     public class WallEEngine
     {
-        private CanvasColor[,] Canvas;
+        public CanvasColor[,] Canvas;
         public int CanvasSize => Canvas.GetLength(0);
         public int PositionX { get; private set; }
         public int PositionY { get; private set; }
@@ -13,12 +16,12 @@ namespace PixeLWallE
         public int BrushSize { get; private set; } = 1;
         public WallEEngine(int size)
         {
+            Canvas = new CanvasColor[size, size];
             ResizeCanvas(size);
         }
 
         public void ResizeCanvas(int size)
         {
-            Canvas = new CanvasColor[size, size];
             for (int i = 0; i < size; i++)
             {
                 for (int j = 0; j < size; j++)
@@ -208,6 +211,12 @@ namespace PixeLWallE
         {
             return Canvas[x, y];
         }
+        public CanvasColor[,] GetCanvas()
+    {
+        var clone = new CanvasColor[CanvasSize, CanvasSize];
+        Array.Copy(Canvas, clone, Canvas.Length);
+        return clone;
+    }
     }
 
     public enum CanvasColor

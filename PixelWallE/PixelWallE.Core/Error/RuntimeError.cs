@@ -1,6 +1,7 @@
 using System;
+using PixelWallE;
 
-namespace PixeLWallE
+namespace PixelWallE
 {public class RuntimeErrorException : Exception
 {
     public Token Token { get; }

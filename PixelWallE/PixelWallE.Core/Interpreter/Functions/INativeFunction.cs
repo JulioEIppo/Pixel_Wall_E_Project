@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 
-namespace PixeLWallE
+
+namespace PixelWallE
 {
     public interface INativeFunction
     {
@@ -86,10 +88,10 @@ namespace PixeLWallE
             return count;
         }
     }
-    public class IsBrushColor : INativeFunction
+    public class IsBrushColorFunction : INativeFunction
     {
         public WallEEngine wallEContext;
-        public IsBrushColor(WallEEngine context)
+        public IsBrushColorFunction(WallEEngine context)
         {
             wallEContext = context;
         }
@@ -107,10 +109,10 @@ namespace PixeLWallE
             return wallEContext.BrushColor == color ? 1 : 0;
         }
     }
-    public class IsBrushSize : INativeFunction
+    public class IsBrushSizeFunction : INativeFunction
     {
         public WallEEngine wallEContext;
-        public IsBrushSize(WallEEngine context)
+        public IsBrushSizeFunction(WallEEngine context)
         {
             wallEContext = context;
         }
@@ -124,10 +126,10 @@ namespace PixeLWallE
             return wallEContext.BrushSize == size ? 1 : 0;
         }
     }
-    public class IsCanvasColor : INativeFunction
+    public class IsCanvasColorFunction : INativeFunction
     {
         public WallEEngine wallEContext;
-        public IsCanvasColor(WallEEngine context)
+        public IsCanvasColorFunction(WallEEngine context)
         {
             wallEContext = context;
         }
@@ -148,7 +150,7 @@ namespace PixeLWallE
             int y = wallEContext.PositionY + vert;
             if (!wallEContext.InBounds(x, y)) return 0;
 
-            return wallEContext.GetCanvasColor(x,y) == color ? 1 : 0;
+            return wallEContext.GetCanvasColor(x, y) == color ? 1 : 0;
         }
     }
 }

@@ -1,5 +1,5 @@
 using System.Reflection.Emit;
-namespace PixeLWallE
+namespace PixelWallE
 {
     public abstract class Statement
     {
@@ -117,7 +117,7 @@ namespace PixeLWallE
         public DrawLineStmt(Token keyword, Expression dirX, Expression dirY, Expression distance)
         {
             Keyword = keyword;
-            DirX = dirY;
+            DirX = dirX;
             DirY = dirY;
             Distance = distance;
         }

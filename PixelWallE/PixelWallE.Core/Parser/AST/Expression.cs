@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace PixeLWallE
+namespace PixelWallE
 {
     public abstract class Expression
     {

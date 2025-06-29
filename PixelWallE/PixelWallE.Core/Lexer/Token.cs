@@ -1,4 +1,4 @@
-namespace PixeLWallE
+namespace PixelWallE
 {
     public class Token
     {

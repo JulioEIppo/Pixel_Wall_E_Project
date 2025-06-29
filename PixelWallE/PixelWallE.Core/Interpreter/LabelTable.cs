@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Reflection.Emit;
-namespace PixeLWallE
+namespace PixelWallE
 {
     public class LabelTable
     {

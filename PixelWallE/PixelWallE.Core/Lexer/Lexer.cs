@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Text.RegularExpressions;
-namespace PixeLWallE
+namespace PixelWallE
 {
     public class Lexer
     {

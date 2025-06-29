@@ -2,26 +2,29 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection.Emit;
 using System.Security.AccessControl;
-using Avalonia.Animation;
-using Avalonia.Utilities;
-using Tmds.DBus.Protocol;
 
-namespace PixeLWallE
+namespace PixelWallE
 {
     public class Interpreter : IExpressionVisitor<object>, IStatementVisitor<object>
     {
-        private WallEEngine wallEContext;
+        private WallEEngine wallEEngine;
         private Dictionary<string, INativeFunction> nativeFunctions = new();
         private Environment environment = new();
         private Dictionary<string, INativeFunction> NativeFunctions = new();
         private LabelTable labelTable = new();
         private int currentLine;
-        public Interpreter(WallEEngine context)
+        public Interpreter(WallEEngine engine)
         {
-            wallEContext = context;
+            wallEEngine = engine;
             this.nativeFunctions = new()
             {
-                {"GetActualX", new GetActualXFunction(context)}
+                {"GetActualX", new GetActualXFunction(engine)},
+                {"GetActualY", new GetActualYFunction(engine)},
+                {"GetCanvasSize", new GetCanvasSizeFunction(engine)},
+                {"GetColorCount", new GetColorCountFunction(engine)},
+                {"IsBrushColor", new IsBrushColorFunction(engine)},
+                {"IsBrushSize", new IsBrushSizeFunction(engine)},
+                {"IsCanvasColor", new IsCanvasColorFunction(engine)}
             };
         }
 
@@ -174,7 +177,7 @@ namespace PixeLWallE
             object y = Evaluate(spawn.Y);
             if (x is int valueX && y is int valueY)
             {
-                wallEContext.Spawn(valueX, valueY, spawn.Keyword);
+                wallEEngine.Spawn(valueX, valueY, spawn.Keyword);
             }
             throw new RuntimeErrorException(spawn.Keyword, "Expected int parameters");
         }
@@ -185,7 +188,7 @@ namespace PixeLWallE
             {
                 throw new RuntimeErrorException(colorStmt.Keyword, "Expected color parameter");
             }
-            wallEContext.SetColor(color, colorStmt.Keyword);
+            wallEEngine.SetColor(color, colorStmt.Keyword);
         }
         public void Visit(SizeStmt size)
         {
@@ -194,7 +197,7 @@ namespace PixeLWallE
             {
                 throw new RuntimeErrorException(size.Keyword, "Expected int parameter");
             }
-            wallEContext.SetSize(sizeValue, size.Keyword);
+            wallEEngine.SetSize(sizeValue, size.Keyword);
         }
         public void Visit(DrawLineStmt drawLine)
         {
@@ -205,7 +208,7 @@ namespace PixeLWallE
             {
                 throw new RuntimeErrorException(drawLine.Keyword, "Expected int parameters");
             }
-            wallEContext.DrawLine((int)dirX, (int)dirY, (int)distance, drawLine.Keyword);
+            wallEEngine.DrawLine((int)dirX, (int)dirY, (int)distance, drawLine.Keyword);
         }
         public void Visit(DrawCircleStmt drawCircle)
         {
@@ -216,7 +219,7 @@ namespace PixeLWallE
             {
                 throw new RuntimeErrorException(drawCircle.Keyword, "Expected int parameters");
             }
-            wallEContext.DrawCircle((int)dirX, (int)dirY, (int)radius, drawCircle.Keyword);
+            wallEEngine.DrawCircle((int)dirX, (int)dirY, (int)radius, drawCircle.Keyword);
         }
         public void Visit(DrawRectangleStmt drawRectangle)
         {
@@ -229,11 +232,11 @@ namespace PixeLWallE
             {
                 throw new RuntimeErrorException(drawRectangle.Keyword, "Expected int parameters");
             }
-            wallEContext.DrawRectangle((int)dirX, (int)dirY, (int)distance, (int)width, (int)height, drawRectangle.Keyword);
+            wallEEngine.DrawRectangle((int)dirX, (int)dirY, (int)distance, (int)width, (int)height, drawRectangle.Keyword);
         }
         public void Visit(FillStmt fill)
         {
-            wallEContext.Fill();
+            wallEEngine.Fill();
         }
         public void Visit(VarDeclaration var)
         {

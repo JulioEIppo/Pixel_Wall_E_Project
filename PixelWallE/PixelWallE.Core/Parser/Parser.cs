@@ -4,22 +4,17 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection.Emit;
 using System.Reflection.Metadata.Ecma335;
 using System.Text.RegularExpressions;
-namespace PixeLWallE
+namespace PixelWallE
 {
     public class Parser
     {
         public bool foundSpawn = false;
         public TokenStream Stream { get; }
-        public List<Exception> Errors { get; set; }
-        public Parser(TokenStream tokens, List<Exception> errors)
+        public Parser(TokenStream tokens)
         {
             Stream = tokens;
-            Errors = errors;
         }
-        public void ReportSyntaxError(string message)
-        {
-            Errors.Add(new SyntaxErrorException(Stream.Current.Line, message));
-        }
+        
         public Token Consume(TokenType type, string message)
         {
             if (Stream.Current.Type == type)
@@ -28,6 +23,7 @@ namespace PixeLWallE
             }
             throw new SyntaxErrorException(Stream.Current.Line, message);
         }
+      
         public List<Statement> Parse()
         {
             List<Statement> statements = new();
@@ -55,7 +51,7 @@ namespace PixeLWallE
                 }
                 catch (SyntaxErrorException error)
                 {
-                    Errors.Add(error);
+                    WallE.SyntaxError(error);
                     Synchronize();
                 }
             }

@@ -1,6 +1,6 @@
 using System;
 
-namespace PixeLWallE
+namespace PixelWallE
 {
     public class SyntaxErrorException : Exception
     {

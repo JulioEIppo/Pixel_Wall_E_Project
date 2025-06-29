@@ -1,0 +1,11 @@
+C:\PC\Cibernetica\1er Año 2.0\Programacion\2ndProject\PixelWallE\obj\Debug\net8.0\PixelWallE.csproj.AssemblyReference.cache
+C:\PC\Cibernetica\1er Año 2.0\Programacion\2ndProject\PixelWallE\obj\Debug\net8.0\Avalonia\Resources.Inputs.cache
+C:\PC\Cibernetica\1er Año 2.0\Programacion\2ndProject\PixelWallE\obj\Debug\net8.0\Avalonia\resources
+C:\PC\Cibernetica\1er Año 2.0\Programacion\2ndProject\PixelWallE\obj\Debug\net8.0\PixelWallE.GeneratedMSBuildEditorConfig.editorconfig
+C:\PC\Cibernetica\1er Año 2.0\Programacion\2ndProject\PixelWallE\obj\Debug\net8.0\PixelWallE.AssemblyInfoInputs.cache
+C:\PC\Cibernetica\1er Año 2.0\Programacion\2ndProject\PixelWallE\obj\Debug\net8.0\PixelWallE.AssemblyInfo.cs
+C:\PC\Cibernetica\1er Año 2.0\Programacion\2ndProject\PixelWallE\obj\Debug\net8.0\PixelWallE.csproj.CoreCompileInputs.cache
+C:\PC\Cibernetica\1er Año 2.0\Programacion\2ndProject\PixelWallE\obj\Debug\net8.0\PixelWallE.sourcelink.json
+C:\PC\Cibernetica\1er Año 2.0\Programacion\2ndProject\PixelWallE\obj\Debug\net8.0\PixelWallE.dll
+C:\PC\Cibernetica\1er Año 2.0\Programacion\2ndProject\PixelWallE\obj\Debug\net8.0\refint\PixelWallE.dll
+C:\PC\Cibernetica\1er Año 2.0\Programacion\2ndProject\PixelWallE\obj\Debug\net8.0\PixelWallE.pdb

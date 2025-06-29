@@ -1,6 +1,6 @@
 using System.Reflection.Emit;
 using System.Text.RegularExpressions;
-namespace PixeLWallE
+namespace PixelWallE
 
 {
     public interface IExpressionVisitor<T>
