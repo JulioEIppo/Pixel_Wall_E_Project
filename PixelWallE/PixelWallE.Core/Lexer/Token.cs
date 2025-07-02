@@ -27,7 +27,7 @@ namespace PixelWallE
         //Symbols
         Assign, Comma, Semicolon, OpenBracket, ClosedBracket, OpenSquareBracket, ClosedSquareBracket,
 
-        Number, InvalidNumber, Identifier, Label, ColorLiteral,
+        True,False,Number, InvalidNumber, Identifier, Label, ColorLiteral,
 
         EndOfLine, EndOfFile, Spaces
     }

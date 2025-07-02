@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "k4qxg5L+9fw=",
+  "dgSpecHash": "l+ECsA3roxw=",
   "success": true,
   "projectFilePath": "C:\\PC\\Cibernetica\\1er Año 2.0\\Programacion\\2ndProject\\PixelWallE\\PixelWallE.csproj",
   "expectedPackageFiles": [
@@ -45,10 +45,22 @@
     "C:\\Users\\Admin\\.nuget\\packages\\textmatesharp\\1.0.65\\textmatesharp.1.0.65.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\textmatesharp.grammars\\1.0.65\\textmatesharp.grammars.1.0.65.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\tmds.dbus.protocol\\0.21.2\\tmds.dbus.protocol.0.21.2.nupkg.sha512",
-    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.17\\microsoft.netcore.app.ref.8.0.17.nupkg.sha512",
-    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.17\\microsoft.windowsdesktop.app.ref.8.0.17.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.17\\microsoft.aspnetcore.app.ref.8.0.17.nupkg.sha512",
-    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\8.0.17\\microsoft.netcore.app.host.win-x64.8.0.17.nupkg.sha512"
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.linux-x64\\8.0.17\\microsoft.aspnetcore.app.runtime.linux-x64.8.0.17.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.osx-arm64\\8.0.17\\microsoft.aspnetcore.app.runtime.osx-arm64.8.0.17.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.osx-x64\\8.0.17\\microsoft.aspnetcore.app.runtime.osx-x64.8.0.17.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x64\\8.0.17\\microsoft.aspnetcore.app.runtime.win-x64.8.0.17.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.netcore.app.host.linux-x64\\8.0.17\\microsoft.netcore.app.host.linux-x64.8.0.17.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.netcore.app.host.osx-arm64\\8.0.17\\microsoft.netcore.app.host.osx-arm64.8.0.17.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.netcore.app.host.osx-x64\\8.0.17\\microsoft.netcore.app.host.osx-x64.8.0.17.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\8.0.17\\microsoft.netcore.app.host.win-x64.8.0.17.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.17\\microsoft.netcore.app.ref.8.0.17.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.netcore.app.runtime.linux-x64\\8.0.17\\microsoft.netcore.app.runtime.linux-x64.8.0.17.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.netcore.app.runtime.osx-arm64\\8.0.17\\microsoft.netcore.app.runtime.osx-arm64.8.0.17.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.netcore.app.runtime.osx-x64\\8.0.17\\microsoft.netcore.app.runtime.osx-x64.8.0.17.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x64\\8.0.17\\microsoft.netcore.app.runtime.win-x64.8.0.17.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.17\\microsoft.windowsdesktop.app.ref.8.0.17.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x64\\8.0.17\\microsoft.windowsdesktop.app.runtime.win-x64.8.0.17.nupkg.sha512"
   ],
   "logs": []
 }

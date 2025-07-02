@@ -31,6 +31,8 @@ namespace PixelWallE
     { "Black", TokenType.ColorLiteral },
     { "White", TokenType.ColorLiteral },
     { "Transparent", TokenType.ColorLiteral },
+    {"false", TokenType.False},
+    {"true", TokenType.True},
     };
 
         public static readonly Dictionary<string, TokenType> operators = new()

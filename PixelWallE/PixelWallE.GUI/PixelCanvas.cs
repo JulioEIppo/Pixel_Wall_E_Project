@@ -90,6 +90,7 @@ namespace PixelWallE
             if (change.Property == RowsProperty || change.Property == ColumnsProperty || change.Property == CellSizeProperty)
             {
                 canvasData = new CanvasColor[Rows, Columns];
+                Initialize();
                 InvalidateMeasure();
                 InvalidateVisual();
             }
