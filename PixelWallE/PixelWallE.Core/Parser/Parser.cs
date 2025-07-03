@@ -14,7 +14,7 @@ namespace PixelWallE
         {
             Stream = tokens;
         }
-        
+
         public Token Consume(TokenType type, string message)
         {
             if (Stream.Current.Type == type)
@@ -23,7 +23,7 @@ namespace PixelWallE
             }
             throw new SyntaxErrorException(Stream.Current.Line, message);
         }
-      
+
         public List<Statement> Parse()
         {
             List<Statement> statements = new();
@@ -34,7 +34,7 @@ namespace PixelWallE
                     if (!foundSpawn)
                     {
                         if (Stream.Current.Type != TokenType.Spawn) throw new SyntaxErrorException(Stream.Current.Line, "Expected Spawn Token at beginning");
-                        foundSpawn = true;
+                        Stream.Next();
                         statements.Add(ParseSpawn());
                     }
                     else
@@ -82,6 +82,7 @@ namespace PixelWallE
             Expression y = ParseExpression();
             Consume(TokenType.ClosedBracket, "Expected )");
             Consume(TokenType.EndOfLine, "Expected end of line");
+            foundSpawn = true;
             return new SpawnStmt(keyword, x, y);
         }
 
@@ -159,25 +160,22 @@ namespace PixelWallE
         {
             Token keyword = Stream.Previous();
             Consume(TokenType.OpenSquareBracket, "Expected [");
-            Token label = Consume(TokenType.Label, "Expected label");
+            Token labelID = Consume(TokenType.Identifier, "Expected label");
             Consume(TokenType.ClosedSquareBracket, "Expected ]");
             Consume(TokenType.OpenBracket, "Expected (");
             Expression expr = ParseExpression();
             Consume(TokenType.ClosedBracket, "Expected )");
-            return new GoToStatement(keyword, label.Value, expr);
+            Consume(TokenType.EndOfLine, "Expected end of line");
+            return new GoToStatement(keyword, labelID.Value, expr);
         }
         private Statement ParseLabel()
         {
-            if (Stream.Current.Type == TokenType.Identifier && Stream.Peek().Type == TokenType.EndOfLine)
-            {
-                Token labelToken = Stream.Current;
-                string label = Stream.Current.Value;
-                Stream.Match(TokenType.Identifier);
-                int line = Stream.Current.Line;
-                Stream.Match(TokenType.EndOfLine);
-                return new LabelStatement(labelToken);
-            }
-            throw new SyntaxErrorException(Stream.Current.Line, "Invalid Label");
+            Token labelToken = Stream.Current;
+            string label = Stream.Current.Value;
+            int line = Stream.Current.Line;
+            Consume(TokenType.Identifier, "Expected Label identifier");
+            Consume(TokenType.EndOfLine, "Expected end of line ");
+            return new LabelStatement(labelToken);
         }
         private Statement ParseDeclaration()
         {
@@ -185,19 +183,20 @@ namespace PixelWallE
                 return ParseVarDeclaration();
             if (Stream.Peek().Type == TokenType.EndOfLine)
                 return ParseLabel();
-            throw new SyntaxErrorException(Stream.Current.Line, "Expected a declaration of a variable or a label");
+            return ParseExpressionStatement();
         }
         private Statement ParseVarDeclaration()
         {
-            Token id = Stream.Next();
-            Stream.Next();    //skip assignment operator
+            Token id = Stream.CurrentToken();
+            Stream.Next(); Stream.Next();  //skip assignment operator
             Expression expr = ParseExpression();
+            Consume(TokenType.EndOfLine, "Expected end of line");
             return new VarDeclaration(id.Value, expr);
         }
         private Statement ParseExpressionStatement()
         {
             Expression expr = ParseExpression();
-            Stream.Match(TokenType.EndOfLine);
+            Consume(TokenType.EndOfLine, "Expected end of line");
             return new ExpressionStatement(expr);
         }
         private Expression ParseExpression()
@@ -289,14 +288,16 @@ namespace PixelWallE
         }
         private Expression ParsePrimary()
         {
-            if (Stream.Match(TokenType.Number))
+            if (Stream.Match(TokenType.Number, TokenType.Boolean, TokenType.String))
             {
                 return new LiteralExpression(Stream.Previous());
             }
+
             if (Stream.Match(TokenType.Identifier))
             {
                 return new VarExpression(Stream.Previous());
             }
+
             if (Stream.Match(TokenType.OpenBracket))
             {
                 var expr = ParseExpression();

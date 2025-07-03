@@ -8,7 +8,7 @@ namespace PixelWallE
     public class Interpreter : IExpressionVisitor<object>, IStatementVisitor<object>
     {
         private WallEEngine wallEEngine;
-        private Dictionary<string, INativeFunction> nativeFunctions = new();
+        private readonly Dictionary<string, INativeFunction> nativeFunctions;
         private Environment environment = new();
         private Dictionary<string, INativeFunction> NativeFunctions = new();
         private LabelTable labelTable = new();
@@ -16,7 +16,7 @@ namespace PixelWallE
         public Interpreter(WallEEngine engine)
         {
             wallEEngine = engine;
-            this.nativeFunctions = new()
+            nativeFunctions = new()
             {
                 {"GetActualX", new GetActualXFunction(engine)},
                 {"GetActualY", new GetActualYFunction(engine)},
@@ -41,9 +41,9 @@ namespace PixelWallE
                     if (aux == currentLine) currentLine++;
                 }
             }
-            catch (RuntimeErrorException)
+            catch (RuntimeErrorException err)
             {
-                // VISUAL MESSAGE OR SOMETHING HERE!!!
+                WallE.RuntimeError(err);
             }
         }
         private object Evaluate(Expression expr)
@@ -175,18 +175,18 @@ namespace PixelWallE
         {
             object x = Evaluate(spawn.X);
             object y = Evaluate(spawn.Y);
-            if (x is int valueX && y is int valueY)
+            if (x is not int  && y is not int )
             {
-                wallEEngine.Spawn(valueX, valueY, spawn.Keyword);
+            throw new RuntimeErrorException(spawn.Keyword, $"Expected int parameters for Spawn in line:{spawn.Keyword.Line}");
             }
-            throw new RuntimeErrorException(spawn.Keyword, "Expected int parameters");
+                wallEEngine.Spawn((int)x, (int)y, spawn.Keyword);
         }
         public void Visit(ColorStmt colorStmt)
         {
             object colorString = Evaluate(colorStmt.Color);
             if (colorString is not string color)
             {
-                throw new RuntimeErrorException(colorStmt.Keyword, "Expected color parameter");
+                throw new RuntimeErrorException(colorStmt.Keyword, $"Expected color string parameter in line{colorStmt.Keyword.Line}");
             }
             wallEEngine.SetColor(color, colorStmt.Keyword);
         }
@@ -195,7 +195,7 @@ namespace PixelWallE
             object value = Evaluate(size.Size);
             if (value is not int sizeValue)
             {
-                throw new RuntimeErrorException(size.Keyword, "Expected int parameter");
+                throw new RuntimeErrorException(size.Keyword, $"Expected int parameter for Size in line:{size.Keyword.Line}");
             }
             wallEEngine.SetSize(sizeValue, size.Keyword);
         }
@@ -206,7 +206,7 @@ namespace PixelWallE
             object distance = Evaluate(drawLine.Distance);
             if (dirX is not int || dirY is not int || distance is not int)
             {
-                throw new RuntimeErrorException(drawLine.Keyword, "Expected int parameters");
+                throw new RuntimeErrorException(drawLine.Keyword, $"Expected int parameters for DrawLine in line:{drawLine.Keyword.Line} ");
             }
             wallEEngine.DrawLine((int)dirX, (int)dirY, (int)distance, drawLine.Keyword);
         }
@@ -217,7 +217,7 @@ namespace PixelWallE
             object radius = Evaluate(drawCircle.Radius);
             if (dirX is not int || dirY is not int || radius is not int)
             {
-                throw new RuntimeErrorException(drawCircle.Keyword, "Expected int parameters");
+                throw new RuntimeErrorException(drawCircle.Keyword, $"Expected int parameters for DrawCircle in line:{drawCircle.Keyword.Line}");
             }
             wallEEngine.DrawCircle((int)dirX, (int)dirY, (int)radius, drawCircle.Keyword);
         }
@@ -230,7 +230,7 @@ namespace PixelWallE
             object height = Evaluate(drawRectangle.Height);
             if (dirX is not int || dirY is not int || distance is not int || width is not int || height is not int)
             {
-                throw new RuntimeErrorException(drawRectangle.Keyword, "Expected int parameters");
+                throw new RuntimeErrorException(drawRectangle.Keyword, $"Expected int parameters for DrawRectangle in line:{drawRectangle.Keyword.Line}");
             }
             wallEEngine.DrawRectangle((int)dirX, (int)dirY, (int)distance, (int)width, (int)height, drawRectangle.Keyword);
         }
@@ -253,7 +253,7 @@ namespace PixelWallE
             var condition = Evaluate(goToStatement.Condition);
             if (condition is not bool)
             {
-                throw new RuntimeErrorException(goToStatement.Keyword, "Invalid condition, expected bool");
+                throw new RuntimeErrorException(goToStatement.Keyword, $"Invalid condition, expected bool for GoTo in line:{goToStatement.Keyword.Line}");
             }
             if ((bool)condition)
             {

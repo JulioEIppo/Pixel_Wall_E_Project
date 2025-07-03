@@ -27,7 +27,7 @@ namespace PixelWallE
         }
         public Token Peek(int n = 1)
         {
-            int index = Position + n - 1;
+            int index = Position + n;
             if (index < Tokens.Count)
             {
                 return Tokens[index];
@@ -37,7 +37,7 @@ namespace PixelWallE
         }
         public bool IsAtEnd()
         {
-            return Position >= Tokens.Count;
+            return Position >= Tokens.Count - 1;
         }
         public Token CurrentToken()
         {

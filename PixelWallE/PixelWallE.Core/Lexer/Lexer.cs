@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Text.RegularExpressions;
@@ -68,6 +69,7 @@ namespace PixelWallE
                     if (type == TokenType.EndOfLine)
                     {
                         CurrentLine++;
+                        Console.WriteLine(type);
                         return new Token(TokenType.EndOfLine, "", CurrentLine);
                     }
                     if (type == TokenType.Identifier && LexicalAnalyzer.keywords.TryGetValue(value, out TokenType keywordType))
@@ -84,16 +86,28 @@ namespace PixelWallE
 
         private Token? TokenCreator(TokenType type, string value)
         {
-            object? parsedValue = null;
             if (type == TokenType.Number)
             {
                 if (int.TryParse(value, out int parsedInt))
                 {
-                    parsedValue = parsedInt;
-                    return new Token(type, value, CurrentLine, parsedValue);
+                    return new Token(type, value, CurrentLine, parsedInt);
                 }
                 Errors.Add(new SyntaxErrorException(CurrentLine, $"Invalid number format: {value}"));
                 return null;
+            }
+            if (type == TokenType.Boolean)
+            {
+                if (bool.TryParse(value, out bool parsedBool))
+                {
+                    return new Token(type, value, CurrentLine, parsedBool);
+                }
+                Errors.Add(new SyntaxErrorException(CurrentLine, $"Invalid format, expected bool:{value}"));
+                return null;
+            }
+            if (type == TokenType.String)
+            {
+                value = value.Substring(1, value.Length - 2); // remove quotes
+                return new Token(type, value, CurrentLine, value);
             }
             if (type == TokenType.Identifier)
             {

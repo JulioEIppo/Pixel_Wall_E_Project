@@ -22,17 +22,8 @@ namespace PixelWallE
     { "IsBrushColor",TokenType.IsBrushColor},
     {"IsBrushSize", TokenType.IsBrushSize},
     { "IsCanvasColor",TokenType.IsCanvasColor},
-    { "Red", TokenType.ColorLiteral },
-    { "Blue", TokenType.ColorLiteral },
-    { "Green", TokenType.ColorLiteral },
-    { "Yellow", TokenType.ColorLiteral },
-    { "Orange", TokenType.ColorLiteral },
-    { "Purple", TokenType.ColorLiteral },
-    { "Black", TokenType.ColorLiteral },
-    { "White", TokenType.ColorLiteral },
-    { "Transparent", TokenType.ColorLiteral },
-    {"false", TokenType.False},
-    {"true", TokenType.True},
+    {"false", TokenType.Boolean},
+    {"true", TokenType.Boolean},
     };
 
         public static readonly Dictionary<string, TokenType> operators = new()
@@ -66,7 +57,10 @@ namespace PixelWallE
    {
     (new Regex(@"^[ \t]+"), TokenType.Spaces),
 
-    (new Regex(@"^\r\n"), TokenType.EndOfLine),
+    (new Regex(@"^(\r\n|\n|\r)"), TokenType.EndOfLine),
+
+    (new Regex(@"^""[^""]*"""), TokenType.String),
+    
     (new Regex(@"^-?\d+[a-zA-Z_][a-zA-Z0-9_]*"), TokenType.InvalidNumber),
 
     (new Regex(@"^-?\d+"),TokenType.Number),
