@@ -46,6 +46,8 @@ namespace PixelWallE
             {
                 throw new RuntimeErrorException(spawnToken, $"Coordinates out of canvas: ({x},{y})");
             }
+            PositionX = x;
+            PositionY = y;
         }
         public void SetColor(string colorString, Token colorToken)
         {
@@ -91,7 +93,7 @@ namespace PixelWallE
 
         public void DrawCircle(int dx, int dy, int radius, Token circleToken)
         {
-            if (dx < -1 || dy < -1 || dx > 1 || dy > 1 || (dx == 0 && dy == 0))
+            if (dx < -1 || dy < -1 || dx > 1 || dy > 1)
             {
                 throw new RuntimeErrorException(circleToken, "Invalid directions");
             }
@@ -120,18 +122,16 @@ namespace PixelWallE
         }
         public void DrawRectangle(int dx, int dy, int distance, int width, int height, Token rectangleToken)
         {
-            if (dx < -1 || dy < -1 || dx > 1 || dy > 1 || (dx == 0 && dy == 0))
+            if (dx < -1 || dy < -1 || dx > 1 || dy > 1)
             {
                 throw new RuntimeErrorException(rectangleToken, "Invalid directions");
             }
             if (distance < 0) distance = 0;
             if (width < 0) width = 0;
             if (height < 0) height = 0;
-            width = width % 2 == 0 ? width - 1 : width;
-            height = height % 2 == 0 ? height - 1 : height;// make sure width and height are odd for symmetry
 
-            int centerX = PositionX + dx * distance;
-            int centerY = PositionY + dy * distance;
+            int centerX = PositionX + dy * distance;
+            int centerY = PositionY + dx * distance;
             int halfW = width / 2;
             int halfH = height / 2;
             int left = centerX - halfW;
@@ -143,7 +143,7 @@ namespace PixelWallE
                 PaintBrush(x, up);
                 PaintBrush(x, down); // paint up and down 
             }
-            for (int y = up + 1; y < down; y++)
+            for (int y = up + 1; y <= down; y++)
             {
                 PaintBrush(left, y);
                 PaintBrush(right, y); // paint sides 
@@ -212,23 +212,12 @@ namespace PixelWallE
             return Canvas[x, y];
         }
         public CanvasColor[,] GetCanvas()
-    {
-        var clone = new CanvasColor[CanvasSize, CanvasSize];
-        Array.Copy(Canvas, clone, Canvas.Length);
-        return clone;
-    }
+        {
+            var clone = new CanvasColor[CanvasSize, CanvasSize];
+            Array.Copy(Canvas, clone, Canvas.Length);
+            return clone;
+        }
     }
 
-    public enum CanvasColor
-    {
-        Red,
-        Blue,
-        Green,
-        Yellow,
-        Orange,
-        Purple,
-        Black,
-        White,
-        Transparent,
-    }
+   
 }

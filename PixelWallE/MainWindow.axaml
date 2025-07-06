@@ -14,9 +14,9 @@
         <Border Grid.Row="0" Background="#FFD3D3D3" Padding="10">
             <StackPanel Orientation="Horizontal" Spacing="10">
                 <TextBlock Text="Canvas Size:" VerticalAlignment="Center"/>
-                <TextBox Name="SizeInput" Width="50" Text="50"/>
+                <TextBox Name="SizeInput" Width="50" Text="100"/>
                 <TextBlock Text="Pixel Size:" VerticalAlignment="Center"/>
-                <TextBox Name="PixelSizeInput" Width="50" Text="20"/>
+                <TextBox Name="PixelSizeInput" Width="50" Text="10"/>
                 <Button Name="ResizeButton" Content="Restore" MinWidth="100" Click="OnResizeClick"/>
                 <Button Name="GridButton" Content="Grid: ON" MinWidth="100" Click="OnGridClick"/>
                 <Button Name="RunButton" Content="Run" MinWidth="80" Margin="20,0,0,0" Click="OnRunClick"/>
@@ -70,7 +70,7 @@
                             MinHeight="100"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
-                            Text="// Escribe tu código aquí" />
+                            Text="Input code..." />
                     </ScrollViewer>
                 </Grid>
             </Border>

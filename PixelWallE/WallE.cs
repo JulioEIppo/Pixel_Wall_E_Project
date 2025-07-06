@@ -10,7 +10,7 @@ namespace PixelWallE
 {
     public static class WallE
     {
-        private static WallEEngine engine = new WallEEngine(50);
+        private static WallEEngine engine = new WallEEngine(100);
         private static Interpreter interpreter = new Interpreter(engine);
         public static List<string> Errors = new();
         private static string errorMessage = "";

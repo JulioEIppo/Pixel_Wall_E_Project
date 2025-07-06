@@ -160,7 +160,7 @@ namespace PixelWallE
         {
             Token keyword = Stream.Previous();
             Consume(TokenType.OpenSquareBracket, "Expected [");
-            Token labelID = Consume(TokenType.Identifier, "Expected label");
+            Token labelID = Consume(TokenType.Identifier, "Expected label identifier");
             Consume(TokenType.ClosedSquareBracket, "Expected ]");
             Consume(TokenType.OpenBracket, "Expected (");
             Expression expr = ParseExpression();
@@ -171,8 +171,8 @@ namespace PixelWallE
         private Statement ParseLabel()
         {
             Token labelToken = Stream.Current;
-            string label = Stream.Current.Value;
-            int line = Stream.Current.Line;
+            // string label = Stream.Current.Value;
+            // int line = Stream.Current.Line;
             Consume(TokenType.Identifier, "Expected Label identifier");
             Consume(TokenType.EndOfLine, "Expected end of line ");
             return new LabelStatement(labelToken);
@@ -307,7 +307,10 @@ namespace PixelWallE
                 }
                 return new GroupingExpression(expr);
             }
-            throw new SyntaxErrorException(Stream.Current.Line, "Expected expression");
+            if (!Stream.Match(TokenType.EndOfFile, TokenType.EndOfLine))
+                throw new SyntaxErrorException(Stream.Current.Line, "Expected expression");
+
+            return null;
         }
         private void Synchronize()
         {

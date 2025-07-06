@@ -257,7 +257,7 @@ namespace PixelWallE
             }
             if ((bool)condition)
             {
-                currentLine = labelTable.GetLine(goToStatement.Keyword);
+                currentLine = labelTable.GetLine(goToStatement.Keyword, goToStatement.Label);
             }
         }
 

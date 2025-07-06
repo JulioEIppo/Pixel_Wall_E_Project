@@ -13,13 +13,13 @@ namespace PixelWallE
             }
             MapLabel[label.Value] = label.Line;
         }
-        public int GetLine(Token label)
+        public int GetLine(Token token, string labelName )
         {
-            if (MapLabel.TryGetValue(label.Value, out int line))
+            if (MapLabel.TryGetValue(labelName, out int line))
             {
                 return line;
             }
-            throw new RuntimeErrorException(label, $"Label {label.Value} doesn't exist");
+            throw new RuntimeErrorException(token, $"Label {labelName} doesn't exist");
         }
         public bool CheckLabel(Token label) => MapLabel.ContainsKey(label.Value);
     }

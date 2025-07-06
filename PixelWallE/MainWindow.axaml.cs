@@ -25,8 +25,8 @@ public partial class MainWindow : Window
         SizeInput.TextChanged += (s, e) => UpdateDimensions();
         PixelSizeInput.TextChanged += (s, e) => UpdateDimensions();
         canvasLogic = new CanvasLogic(this);
-        CodeTextBox.TextChanged += CodeTextBox_TextChanged;
-        CodeScrollViewer.ScrollChanged += CodeScrollViewer_ScrollChanged;
+        CodeTextBox.TextChanged += CodeTextBoxTextChanged;
+        CodeScrollViewer.ScrollChanged += CodeScrollViewerScrollChanged;
     }
     public void UpdateCanvas(CanvasColor[,] canvasData)
     {
@@ -167,13 +167,13 @@ public partial class MainWindow : Window
         PixelCanvasControl.ShowGrid = !PixelCanvasControl.ShowGrid;
         GridButton.Content = PixelCanvasControl.ShowGrid ? "Grid: On" : "Grid: Off";
     }
-    private void CodeTextBox_TextChanged(object? sender, EventArgs e)
+    private void CodeTextBoxTextChanged(object? sender, EventArgs e)
     {
         var lines = CodeTextBox.Text?.Split('\n').Length ?? 1;
         LineNumbers.Text = string.Join("\n", Enumerable.Range(1, lines));
     }
 
-    private void CodeScrollViewer_ScrollChanged(object? sender, ScrollChangedEventArgs e)
+    private void CodeScrollViewerScrollChanged(object? sender, ScrollChangedEventArgs e)
     {
         // Sincroniza el scroll vertical de la numeración con el del editor
         LineScrollViewer.Offset = new Vector(LineScrollViewer.Offset.X, CodeScrollViewer.Offset.Y);

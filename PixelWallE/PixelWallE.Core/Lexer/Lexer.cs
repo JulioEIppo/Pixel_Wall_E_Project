@@ -74,7 +74,8 @@ namespace PixelWallE
                     }
                     if (type == TokenType.Identifier && LexicalAnalyzer.keywords.TryGetValue(value, out TokenType keywordType))
                     {
-                        return new Token(keywordType, value, CurrentLine);
+                        object parsedBool = keywordType == TokenType.Boolean ? bool.Parse(value) : null!;
+                        return new Token(keywordType, value, CurrentLine, parsedBool);
                     }
                     return TokenCreator(type, value);
                 }
