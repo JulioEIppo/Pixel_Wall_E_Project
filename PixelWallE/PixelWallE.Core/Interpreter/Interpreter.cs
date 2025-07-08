@@ -10,7 +10,7 @@ namespace PixelWallE
         private WallEEngine wallEEngine;
         private readonly Dictionary<string, INativeFunction> nativeFunctions;
         private Environment environment = new();
-        private Dictionary<string, INativeFunction> NativeFunctions = new();
+        // private Dictionary<string, INativeFunction> NativeFunctions = new();
         private LabelTable labelTable = new();
         private int currentLine;
         public Interpreter(WallEEngine engine)
@@ -122,7 +122,7 @@ namespace PixelWallE
         }
         public object Visit(CallExpression expr)
         {
-            if (!NativeFunctions.TryGetValue(expr.Function.Value, out var function))
+            if (!nativeFunctions.TryGetValue(expr.Function.Value, out var function))
                 throw new RuntimeErrorException(expr.Function, $"Function: {expr.Function.Value}  not found");
             if (expr.Arguments.Count != function.Arity)
             {
@@ -131,7 +131,7 @@ namespace PixelWallE
             List<object> args = new();
             foreach (var arg in expr.Arguments)
             {
-                args.Add(arg);
+                args.Add(Evaluate(arg));
             }
             return function.Invoke(args, expr.Function);
         }

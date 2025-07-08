@@ -62,23 +62,6 @@ namespace PixelWallE
                     canvasData[x, y] = CanvasColor.White;
         }
 
-        // private static Avalonia.Media.Color ToAvaloniaColor(CanvasColor color)
-        // {
-        //     return color switch
-        //     {
-        //         CanvasColor.Red => Colors.Red,
-        //         CanvasColor.Blue => Colors.Blue,
-        //         CanvasColor.Green => Colors.Green,
-        //         CanvasColor.Yellow => Colors.Yellow,
-        //         CanvasColor.Orange => Colors.Orange,
-        //         CanvasColor.Purple => Colors.Purple,
-        //         CanvasColor.Black => Colors.Black,
-        //         CanvasColor.White => Colors.White,
-        //         CanvasColor.Transparent => Colors.Transparent,
-        //         _ => Colors.Gray
-        //     };
-
-        // }
 
         public void SetCanvasData(CanvasColor[,] data)
         {
@@ -96,7 +79,6 @@ namespace PixelWallE
                 InvalidateMeasure();
                 InvalidateVisual();
             }
-
         }
 
         public void UpdatePixel(int x, int y, CanvasColor color)
@@ -124,7 +106,6 @@ namespace PixelWallE
             for (int y = 0; y < Rows; y++)
                 for (int x = 0; x < Columns; x++)
                 {
-                    // var color = ToAvaloniaColor(canvasData[x, y]);
                     var brush = GetBrushColor(canvasData[x, y]);
                     context.FillRectangle(brush, new Rect(x * cellSize, y * cellSize, cellSize, cellSize));
                 }

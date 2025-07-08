@@ -1,0 +1,8 @@
+Spawn(20,20)
+Color("Blue")
+Size(1)
+r<-5
+loop_radius
+DrawCircle(1,1,r)
+r<-r+3
+GoTo[loop_radius](r<=20)

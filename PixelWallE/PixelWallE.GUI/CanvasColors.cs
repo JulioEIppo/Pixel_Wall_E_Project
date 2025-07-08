@@ -145,8 +145,3 @@ public enum CanvasColor
     Yellow,
     YellowGreen
 }
-public static class CanvasColors
-{
-   
-    
-}

@@ -51,7 +51,7 @@ namespace PixelWallE
         }
         public void SetColor(string colorString, Token colorToken)
         {
-            if (!Enum.TryParse<CanvasColor>(colorString, true, out var color) || !Enum.IsDefined(color))
+            if (!Enum.TryParse<CanvasColor>(colorString, true, out var color) || !Enum.IsDefined(typeof(CanvasColor), color))
             {
                 throw new RuntimeErrorException(colorToken, $"Invalid color, {colorString} not found");
             }
@@ -219,5 +219,5 @@ namespace PixelWallE
         }
     }
 
-   
+
 }

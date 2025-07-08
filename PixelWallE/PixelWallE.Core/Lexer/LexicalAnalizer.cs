@@ -15,13 +15,6 @@ namespace PixelWallE
     { "DrawRectangle",TokenType.DrawRectangle},
     { "Fill",TokenType.Fill},
     { "GoTo",TokenType.GoTo},
-    { "GetActualX",TokenType.GetActualX},
-    { "GetActualY",TokenType.GetActualY},
-    { "GetCanvasSize",TokenType.GetCanvasSize},
-    { "GetColorCount",TokenType.GetColorCount},
-    { "IsBrushColor",TokenType.IsBrushColor},
-    {"IsBrushSize", TokenType.IsBrushSize},
-    { "IsCanvasColor",TokenType.IsCanvasColor},
     {"false", TokenType.Boolean},
     {"true", TokenType.Boolean},
     };
@@ -60,7 +53,7 @@ namespace PixelWallE
     (new Regex(@"^(\r\n|\n|\r)"), TokenType.EndOfLine),
 
     (new Regex(@"^""[^""]*"""), TokenType.String),
-    
+
     (new Regex(@"^-?\d+[a-zA-Z_][a-zA-Z0-9_]*"), TokenType.InvalidNumber),
 
     (new Regex(@"^-?\d+"),TokenType.Number),

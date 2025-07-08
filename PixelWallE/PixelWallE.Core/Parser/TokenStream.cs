@@ -14,7 +14,7 @@ namespace PixelWallE
         }
         private Token EndOfFileToken()
         {
-            int line = Tokens.Count > 0 ? Tokens[^1].Line : -1;
+            int line = Tokens.Count > 0 ? Tokens[Tokens.Count - 1].Line : -1;
             return new Token(TokenType.EndOfFile, "", line);
         }
         public Token Next()
@@ -48,6 +48,15 @@ namespace PixelWallE
             return EndOfFileToken();
 
         }
+        public Token Previous()
+        {
+            if (Position > 0 && Position - 1 < Tokens.Count)
+            {
+                return Tokens[Position - 1];
+            }
+            return EndOfFileToken();
+
+        }
         public bool Match(params TokenType[] types)
         {
             foreach (var type in types)
@@ -57,15 +66,6 @@ namespace PixelWallE
                     return true;
                 }
             return false;
-        }
-        public Token Previous()
-        {
-            if (Position > 0 && Position - 1 < Tokens.Count)
-            {
-                return Tokens[Position - 1];
-            }
-            return EndOfFileToken();
-
         }
     }
 }

@@ -6,7 +6,7 @@ namespace PixelWallE
         public TokenType Type { get; }
         public int Line { get; }
         public object? ParsedValue { get; }
-        public override string ToString() => $"{Type} Token:{Value} ,in line {Line}";
+        // public override string ToString() => $"{Type} Token:{Value} ,in line {Line}";
         public Token(TokenType type, string value, int line, object? parsedValue = null)
         {
             Value = value;
@@ -25,9 +25,9 @@ namespace PixelWallE
         //Functions
         GetActualX, GetActualY, GetCanvasSize, GetColorCount, IsBrushColor, IsBrushSize, IsCanvasColor,
         //Symbols
-        Assign, Comma, Semicolon, OpenBracket, ClosedBracket, OpenSquareBracket, ClosedSquareBracket,
+        Assign, Comma, OpenBracket, ClosedBracket, OpenSquareBracket, ClosedSquareBracket,
 
-        Boolean,Number, InvalidNumber, Identifier, Label, String,
+        Boolean,Number,InvalidNumber, Identifier, Label, String,
 
         EndOfLine, EndOfFile, Spaces
     }

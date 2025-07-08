@@ -69,7 +69,6 @@ namespace PixelWallE
                     if (type == TokenType.EndOfLine)
                     {
                         CurrentLine++;
-                        Console.WriteLine(type);
                         return new Token(TokenType.EndOfLine, "", CurrentLine);
                     }
                     if (type == TokenType.Identifier && LexicalAnalyzer.keywords.TryGetValue(value, out TokenType keywordType))
@@ -83,6 +82,7 @@ namespace PixelWallE
             Errors.Add(new SyntaxErrorException(CurrentLine, $"Unexpected character: {GetActualChar}"));
             Position++;
             return null;
+
         }
 
         private Token? TokenCreator(TokenType type, string value)

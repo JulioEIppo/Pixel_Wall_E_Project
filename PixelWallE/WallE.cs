@@ -54,7 +54,6 @@ namespace PixelWallE
         }
         public static void ReportSyntaxError(string message)
         {
-            // Console.WriteLine($"{message}");
             errorMessage = $"{message}";
             Errors.Add(errorMessage);
             HadSyntaxError = true;
